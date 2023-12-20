@@ -33,9 +33,9 @@ Route::get('/registration',[AuthController::class,'registration'])->name('regist
 
 Route::post('/registration',[AuthController::class,'regins'])->name('registration');
     
-    // Route::post('/',[AuthController::class,'login'])->name('login');
+    Route::get('logout',[AdminController::class,'logout'])->name('logout');
     
-    // Route::get('/registration',[AuthController::class,'registration'])->name('registration');
+    Route::get('/adminprofile',[AdminController::class,'adminprofile'])->name('adminprofile');
     
     // Route::post('/registration',[AuthController::class,'regins'])->name('registration');
     

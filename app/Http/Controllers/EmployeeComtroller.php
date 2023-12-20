@@ -19,7 +19,7 @@ class AdminController extends Controller
         return redirect()->route('login');
     }
 
-    public function adminprofile(){
-        return view('Admin.adminprofile');
+    public function employeeprofile(){
+        return view('Employee.profile');
     }
 }

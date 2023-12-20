@@ -7,32 +7,43 @@ use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function index(){
-        return view('Admin.index');
+        return view('include.index');
     }
    
     public function login(Request $request){
-        $validatedData = Validator::make($request->all(),[
-           $email = $request->email,
-           $password = $request->password
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
-        if($validatedData->passes()){
-            $credentials = [
-                'email' => $request->email,
-                'password' => $request->password,
-            ];
-            // dd(Auth::attempt($credentials));die();
+        if(DB::table('users')->where('email',$request->email)->count()>0){
        if(Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
-        echo "hii"; die();
-        // Session::flash('success', 'Login successfully.');
-        // return redirect()->route('dashboard'); // Redirect to the Dashboard route 
-       }
+       
+        Session::flash('success', 'Login successfully.');
+        $user = DB::table('users')->where('email', $request->email)->first();
+        $status = $user->status;
+        // dd($status);
+        if($status === '1'){
+            return redirect()->route('dashboard'); // Redirect to the Dashboard route 
         }
+        else{
+            return redirect('/')->with('error', 'Your Account is inactive'); 
+        }
+        
+       }
+       else{
+        return redirect('/')->with('error', 'Please enter correct password');
+       }
+    }
+       else{
+        return redirect('/')->with('error', 'Please enter correct email');
+       }
     }
 
     public function registration(){

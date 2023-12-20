@@ -28,13 +28,15 @@
 		<!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
+		  <!--toaster cdn-->
+
+		  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     </head>
     <body class="account-page">
 	
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
 			<div class="account-content">
-				<a href="job-list.html" class="btn btn-primary apply-btn">Apply Job</a>
 				<div class="container">
 				
 					<!-- Account Logo -->
@@ -51,20 +53,34 @@
 							<!-- Account Form -->
 							<form action="{{route('login')}}" method="post">
 								@csrf
-								<div class="input-block mb-4">
+								<div class="input-block mb-3">
 									<label class="col-form-label">Email Address</label>
-									<input class="form-control" type="text" name="email" value="admin@gmail.com">
+									<input class="form-control" type="email" name="email" value="{{old('email')}}">
 								</div>
-								<div class="input-block mb-4">
-									
+								<span class="text-danger">
+								@error('email')
+								{{$message}}
+								@enderror
+								</span>
+
+								
+								<div class="input-block mb-3">
+								<label class="col-form-label">Password</label>
 									<div class="position-relative">
-										<input class="form-control" type="password" name="password" value="123456" id="password">
+										<input class="form-control" type="password" name="password" id="password">
 										<span class="fa-solid fa-eye-slash" id="toggle-password"></span>
 									</div>
 								</div>
+								
+								<span class="text-danger">
+								@error('password')
+								{{$message}}
+								@enderror
+								</span>
 								<div class="input-block mb-4 text-center">
 									<button class="btn btn-primary account-btn" type="submit">Login</button>
 								</div>
+
 								
 							</form>
 							<!-- /Account Form -->
@@ -84,6 +100,16 @@
 		
 		<!-- Custom JS -->
 		<script src="assets/js/app.js"></script>
-		
+		 <!-- Toastr cdn -->
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		<script>
+    @if(Session::has('success'))
+        toastr.success('{{ Session::get('success')}}', 'Success');
+    @endif
+
+    @if(Session::has('error'))
+        toastr.error('{{ Session::get('error')}}', 'Error');
+    @endif
+</script>
     </body>
 </html>
