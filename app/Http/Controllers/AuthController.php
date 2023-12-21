@@ -13,44 +13,46 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('include.index');
     }
-   
-    public function login(Request $request){
+
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        if(DB::table('users')->where('email',$request->email)->count()>0){
-       if(Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){
-       
-        Session::flash('success', 'Login successfully.');
-        $user = DB::table('users')->where('email', $request->email)->first();
-        $status = $user->status;
-        // dd($status);
-        if($status === '1'){
-            return redirect()->route('dashboard'); // Redirect to the Dashboard route 
+        if (DB::table('users')->where('email', $request->email)->count() > 0) {
+
+
+            $user = DB::table('users')->where('email', $request->email)->first();
+            $status = $user->status;
+
+            if ($status == 1) {
+                if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+
+                    // Session::flash('success', 'Login successfully.');
+                    return redirect('dashboard')->with('success', 'Login successfully.'); // Redirect to the Dashboard route 
+                } else {
+                    return redirect('/')->with('error', 'Please enter correct password');
+                }
+            } else {
+                return redirect('/')->with('warning', 'Your Account is inactive');
+            }
+        } else {
+            return redirect('/')->with('error', 'Please enter correct email');
         }
-        else{
-            return redirect('/')->with('error', 'Your Account is inactive'); 
-        }
-        
-       }
-       else{
-        return redirect('/')->with('error', 'Please enter correct password');
-       }
-    }
-       else{
-        return redirect('/')->with('error', 'Please enter correct email');
-       }
     }
 
-    public function registration(){
+    public function registration()
+    {
         return view('Admin.registration');
     }
 
-    public function regins(){
+    public function regins()
+    {
         return view('');
     }
 }

@@ -31,6 +31,9 @@
 		  <!--toaster cdn-->
 
 		  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+		  <style>
+		
+		  </style>
     </head>
     <body class="account-page">
 	
@@ -51,7 +54,7 @@
 							<p class="account-subtitle">Access to our dashboard</p>
 							
 							<!-- Account Form -->
-							<form action="{{route('login')}}" method="post">
+							<form action="{{route('login')}}" method="post" id="loginForm">
 								@csrf
 								<div class="input-block mb-3">
 									<label class="col-form-label">Email Address</label>
@@ -98,18 +101,72 @@
 		<!-- Bootstrap Core JS -->
         <script src="assets/js/bootstrap.bundle.min.js"></script>
 		
+		<!--form-validation -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<!-- Custom JS -->
 		<script src="assets/js/app.js"></script>
 		 <!-- Toastr cdn -->
 		 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		
+		 <script>
+	$('input').keypress(function(e) {
+    if (this.value.length === 0 && e.which === 32) e.preventDefault();
+  });
+	$('form').validate({
+		
+		rules:{
+			email:{
+				required: true,
+                email: true
+			},
+			password:{
+				required:true,
+				minlength:5,
+				password:true
+
+			},
+			
+		}
+	});
+</script>
 		<script>
+    // @if(Session::has('success'))
+    //     toastr.success('{{ Session::get("success")}}', 'Success');
+    // @endif
+
+    // @if(Session::has('error'))
+    //     toastr.error('{{ Session::get("error")}}', 'Error');
+    // @endif
+
+	// @if(Session::has('warning'))
+    //     toastr.warning('{{ Session::get("warning")}}', 'Warn');
+    // @endif
+
     @if(Session::has('success'))
-        toastr.success('{{ Session::get('success')}}', 'Success');
+        toastr.success('{{ Session::get("success") }}', 'Success', {!! json_encode([
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "4000",
+        ]) !!});
     @endif
 
     @if(Session::has('error'))
-        toastr.error('{{ Session::get('error')}}', 'Error');
+        toastr.error('{{ Session::get("error") }}', 'Error', {!! json_encode([
+			"closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "4000",
+        ]) !!});
     @endif
+
+    @if(Session::has('warning'))
+        toastr.warning('{{ Session::get("warning") }}', 'Warning', {!! json_encode([
+            "closeButton" => true,
+            "progressBar" => true,
+            "timeOut" => "4000",
+        ]) !!});
+    @endif
+
 </script>
+
     </body>
 </html>

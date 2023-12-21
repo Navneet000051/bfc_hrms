@@ -23,6 +23,9 @@
 		<!-- Chart CSS -->
 		<link rel="stylesheet" href="assets/plugins/morris/morris.css">
 		
+        <!-- Select2 CSS -->
+		<link rel="stylesheet" href="assets/css/select2.min.css">
+        
 		<!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
@@ -30,5 +33,6 @@
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
    
-	
+	<!-- Datatable CSS -->
+    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     </head>

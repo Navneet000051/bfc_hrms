@@ -277,6 +277,14 @@
 									<li><a href="employee-dashboard.html">Employee Dashboard</a></li>
 								</ul>
 							</li>
+
+							<li >
+								<a href="{{route('employee')}}"><i class="la la-user"></i> <span> Create Employee </span> <span class="menu-arrow"></span></a>
+								
+							</li>
+							<li> 
+								<a href="{{route('client')}}"><i class="la la-user-secret"></i> <span>Create Client</span></a>
+							</li>
 					
 							<li class="menu-title"> 
 								<span>Profile Pages</span>

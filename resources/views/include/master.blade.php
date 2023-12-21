@@ -20,13 +20,15 @@
 			<!-- Page Wrapper -->
           @yield('content')
 			<!-- /Page Wrapper -->
-   
+			
 			
         </div>
 		<!-- /Main Wrapper -->
 		@include('include.rightsidebar')
 		<!-- jQuery -->
     @include('include.footerlink')
+	@yield('datatable')
+	@yield('validationjs')
     @yield('toastralert')
 		
     </body>
