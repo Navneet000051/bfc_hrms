@@ -32,4 +32,4 @@
     @yield('toastralert')
 		
     </body>
-</html>
+</html> 

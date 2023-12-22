@@ -1,5 +1,28 @@
 @extends('include.master')
 @section('content')
+<style>
+	.form-focus .form-control{
+		height:38px !important;
+	}
+	.form-focus .focus-label {
+    font-size: 12px !important;
+	}
+	.heading{
+		background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+	font-weight: 600;
+	}
+	.dropify-wrapper .dropify-message p {
+    margin: 0;
+    font-size: 12px !important;
+}
+.dropify-wrapper .dropify-message span.file-icon {
+    font-size: 20px;
+    color: #CCC;
+}
+</style>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -22,8 +45,61 @@
 			</div>
 		</div>
 		<!-- /Page Header -->
-
-		<div class="row">
+		<!-- Inset Form --->
+		<div class="row pt-3" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
+		<h4 class="text-center pb-2 heading" ><i class="fa-solid fa-plus"></i> Add Employee</h4>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="text" class="form-control floating">
+					<label class="focus-label">Employee Name</label>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="email" class="form-control floating">
+					<label class="focus-label">Email ID</label>
+				</div>
+			</div> 
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="text" class="form-control floating">
+					<label class="focus-label">mobile Number</label></label>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+				<input name="file1" type="file" class="dropify" data-height="100" />
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="text" class="form-control floating">
+					<label class="focus-label">Password</label>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="text" class="form-control floating">
+					<label class="focus-label">Employee Name</label>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="input-block mb-3 form-focus">
+					<input type="email" class="form-control floating">
+					<label class="focus-label">Email ID</label>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				
+			</div>
+			
+			
+			</div>
+			
+			
+		</div>
+		<!-- Inserts Employee Form --->
+		<div class="row pt-2">
 			<div class="col-md-12">
 				<div>
 					<table id="yajradb" class="table table-striped ">
@@ -37,7 +113,7 @@
 							</tr>
 						</thead>
 						<tbody>
-						
+
 						</tbody>
 					</table>
 				</div>

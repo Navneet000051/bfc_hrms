@@ -33,8 +33,8 @@ class AuthController extends Controller
             if ($status == 1) {
                 if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
 
-                    // Session::flash('success', 'Login successfully.');
-                    return redirect('dashboard')->with('success', 'Login successfully.'); // Redirect to the Dashboard route 
+                    Session::flash('success', 'Login successfully.');
+                    return redirect()->route('dashboard'); // Redirect to the Dashboard route 
                 } else {
                     return redirect('/')->with('error', 'Please enter correct password');
                 }

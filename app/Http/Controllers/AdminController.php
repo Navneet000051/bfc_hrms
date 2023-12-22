@@ -40,7 +40,55 @@ class AdminController extends Controller
     
         return view('Admin.createemp');
     }
-    public function createclient(){
+    public function createclient(Request $request){
+        if($request->ajax()){
+            $data = DB::table('users')->select('*')->get();
+            return Datatables::of($data)
+            ->addIndexColumn()
+                ->addColumn('name', function ($row) {
+                    $actionBtn = '<h2 class="table-avatar">
+                    <a href="client-profile.html" class="avatar"><img src="assets/img/profiles/avatar-19.jpg" alt="User Image"></a>
+                    <a href="client-profile.html">Global Technologies</a>
+                </h2>';
+                    return $actionBtn;
+                })
+                ->addColumn('clientid', function ($row) {
+                    $actionBtn = 'CLT-0001';
+                    return $actionBtn;
+                })
+                ->addColumn('cperson', function ($row) {
+                    $actionBtn = 'Barry Cuda';
+                    return $actionBtn;
+                })
+                ->addColumn('mobile', function ($row) {
+                    $actionBtn = '9876543210';
+                    return $actionBtn;
+                })
+                ->addColumn('status', function ($row) {
+                    $actionBtn = '<div class="dropdown action-label">
+                    <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+                    </div>
+                </div>';
+                    return $actionBtn;
+                })
+              
+                ->addColumn('action', function ($row) {
+                    $actionBtn = '<div class="dropdown dropdown-action">
+                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                    </div>
+                </div>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['name','clientid','cperson','mobile','status','action'])
+                ->make(true);
+        }
+
         return view('Admin.createclient');
     }
 }
