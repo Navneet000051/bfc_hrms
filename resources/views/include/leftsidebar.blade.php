@@ -285,7 +285,9 @@
 							<li> 
 								<a href="{{route('client')}}"><i class="la la-user-secret"></i> <span>Create Client</span></a>
 							</li>
-					
+							<li> 
+								<a href="{{route('roles')}}"><i class="la la-tasks" aria-hidden="true"></i><span>Roles Management</span></a>
+							</li>
 							<li class="menu-title"> 
 								<span>Profile Pages</span>
 							</li>

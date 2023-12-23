@@ -29,6 +29,9 @@
 		<!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
+        <!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+		
         <!--toaster cdn-->
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">

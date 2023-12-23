@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Models\roles;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,8 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/createclient',[AdminController::class,'createclient'])->name('client');
 
 
-    // Route::post('/registration',[AuthController::class,'regins'])->name('registration');
+    Route::get('/roles',[AdminController::class,'roles'])->name('roles');
+
+    Route::post('/roles',[AdminController::class,'AddRole'])->name('AddRole');
 
 });

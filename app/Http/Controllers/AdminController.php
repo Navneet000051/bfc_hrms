@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\Datatables;
+use App\Models\roles;
+
 class AdminController extends Controller
 {
     public function Dashboard(){
@@ -90,5 +92,20 @@ class AdminController extends Controller
         }
 
         return view('Admin.createclient');
+    }
+    public function roles(){
+        return view('Admin.manage-roles');
+    }
+    public function AddRole(Request $request){
+
+        // dd($request->all());
+        $roles = new roles;
+        $roles->name = $request->roles;
+        $roles->status = true;
+        $roles->created_at = now();
+        $roles->updated_at = now();
+        $roles->save();
+
+        // return view('Admin.manage-roles');
     }
 }
