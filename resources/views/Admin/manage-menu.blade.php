@@ -1,5 +1,25 @@
 @extends('include.master')
 @section('content')
+<style>
+	@media only screen and (min-width:890px){
+		.col-md-2{
+		width:20%;
+	}
+	
+	}
+	.select2-container .select2-selection.select2-selection--single {
+    border: 1px solid #dcdcdc;
+    height: 50px;
+}
+.text-gray{
+	color:#888888;
+	font-family: 'Nunito Sans', sans-serif;
+}	
+.sub-btn{
+	height: 49px;
+    line-height: 35px;
+}
+</style>
 <!-- Main Wrapper -->
 <div class="main-wrapper">
 
@@ -16,22 +36,98 @@
 						<h3 class="page-title">Roles</h3>
 						<ul class="breadcrumb">
 							<li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-							<li class="breadcrumb-item active">Manage Roles</li>
+							<li class="breadcrumb-item active">Manage Menu</li>
 						</ul>
 					</div>
-					<div class="col-auto float-end ms-auto">
-						<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_client"><i class="fa-solid fa-plus"></i> Add Roles</a>
 
-					</div>
 				</div>
 			</div>
 			<!-- /Page Header -->
+			<!-- Inset Form --->
+			<div class="container mb-5" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
+				<div class="row pt-3 pb-2 employee">
+					<h4 class="text-center pb-2 heading"><i class="fa-solid fa-plus"></i>Add Menu</h4>
+                    
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray focus-label">Main Menu</label>
+						<div class="input-block mb-3 form-focus">
+							<select class="select floating">
+								<option value="0">Parent Menu</option>
+								<option>Global Technologies</option>
+								<option>Delta Infotech</option>
+							</select>
+							<label class="focus-label">Company</label>
+						</div>
+					</div>
+					
+                             
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Menu Label</label>
+						<div class="input-block mb-3 form-focus">
+							<select class="select floating" id="menuLabelSelect" onchange="choseLabel()">
+								<option value="single">Single Menu</option>
+								<option value="double">Double Menu</option>
+							</select>
+							<label class="focus-label">Company</label>
+						</div>
+					</div>
+
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Menu Name</label>
+						<div class="input-block mb-3 form-focus">
+							<select class="select floating">
+								<option>Select Company</option>
+								<option>Global Technologies</option>
+								<option>Delta Infotech</option>
+							</select>
+							<label class="focus-label">Company</label>
+						</div>
+					</div>
+					
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Menu Name</label>
+						<div class="input-block mb-3 form-focus">
+							<input type="text" class="form-control floating">
+							<label class="focus-label">Employee Name</label>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Sub Menu</label>
+						<div class="input-block mb-3 form-focus">
+							<input type="text" class="form-control floating">
+							<label class="focus-label">Employee Name</label>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Icon</label>
+						<div class="input-block mb-3 form-focus">
+							<input type="text" class="form-control floating">
+							<label class="focus-label">la la-home</label>
+						</div>
+					</div>
+					
+					<div class="col-sm-12 col-md-3">
+					<label class="text-gray">Main Menu</label>
+						<div class="input-block mb-3 form-focus">
+							<input type="url" class="form-control floating">
+							<label class="focus-label">Url</label>
+						</div>
+					</div>
+					
+					<div class="col-sm-12 col-md-3 align-self-center">
+					<a href="#" class="btn btn-success w-100 sub-btn"> Submit </a>
+					</div>
+
+				</div>
+
+			</div>
+			<!-- Inserts Employee Form --->
 			<!-- Search Filter -->
 			<div class="row filter-row">
 				<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 					<div class="input-block mb-3 form-focus">
 						<input type="text" class="form-control floating">
-						<label class="focus-label">Employee Name</label>
+						<label class="focus-label">Menu Name</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
@@ -83,7 +179,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table id="yajradb" class="table table-striped w-100">
-							<thead> 
+							<thead>
 								<tr>
 									<th>Sr. No.</th>
 									<th>Role Id</th>
@@ -105,31 +201,7 @@
 		<!-- /Page Content -->
 
 		<!-- Add Roles Modal -->
-		<!-- Add Department Modal -->
-		<div id="add_client" class="modal custom-modal fade" role="dialog">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Add Department</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form action="{{route('AddRole')}}" method="post">
-							@csrf
-							<div class="input-block mb-3">
-								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-								<input class="form-control" name="roles" type="text">
-							</div>
-							<div class="submit-section">
-								<button class="btn btn-primary submit-btn">Submit</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+
 
 		<!-- /Add Roles Modal -->
 
@@ -189,6 +261,13 @@
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
+	<script>
+		function choseLabel(){
+			var id = $('#menuLabelSelect').val();
+			alert(id);
+		}
+	</script>
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(function() {
@@ -196,8 +275,7 @@
 					processing: true,
 					serverSide: true,
 					ajax: "{{ route('roles') }}",
-					columns: [
-						{
+					columns: [{
 							data: 'DT_RowIndex',
 							name: 'DT_RowIndex'
 						},
@@ -217,8 +295,8 @@
 							data: 'status',
 							name: 'status'
 						},
-						
-						
+
+
 						{
 							data: 'action',
 							name: 'action',

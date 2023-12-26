@@ -1,41 +1,11 @@
 @extends('include.master')
 @section('content')
-<style>
-	.form-focus .form-control {
-		height: 38px !important;
-	}
+<swtyle>
+.form-focus .form-control {
+    height: 38px !important;
+}
 
-	.form-focus .focus-label {
-		font-size: 12px !important;
-	}
-
-	.heading {
-		background: linear-gradient(to right, #ff9b44 0%, #fc6075 100%);
-		-webkit-background-clip: text;
-		background-clip: text;
-		-webkit-text-fill-color: transparent;
-		font-weight: 600;
-	}
-
-	.dropify-wrapper .dropify-message p {
-		margin: 0;
-		font-size: 12px !important;
-	}
-
-	.dropify-wrapper .dropify-message span.file-icon {
-		font-size: 20px;
-		color: #CCC;
-	}
-
-	@media only screen and (max-width: 750px) {
-		.employee {
-			position: relative;
-			height: max-content;
-           padding-bottom: 4rem;
-
-		}
-	}
-</style>
+</swtyle>
 <!-- Page Wrapper -->
 <div class="page-wrapper">
 
@@ -380,6 +350,7 @@
 
 		</div>
 		<!-- Inserts Employee Form --->
+		<!-- show Employee Data --->
 		<!-- <div class="row pt-2">
 			<div class="col-md-12">
 				<div>
@@ -402,32 +373,6 @@
 		</div> -->
 	</div>
 	<!-- /Page Content -->
-
-	<!-- Add Department Modal -->
-	<div id="add_department" class="modal custom-modal fade" role="dialog">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Add Department</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="input-block mb-3">
-							<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-							<input class="form-control" type="text">
-						</div>
-						<div class="submit-section">
-							<button class="btn btn-primary submit-btn">Submit</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /Add Department Modal -->
 
 	<!-- Edit Department Modal -->
 	<div id="edit_department" class="modal custom-modal fade" role="dialog">

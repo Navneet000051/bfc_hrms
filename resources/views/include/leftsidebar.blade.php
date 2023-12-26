@@ -288,6 +288,9 @@
 							<li> 
 								<a href="{{route('roles')}}"><i class="la la-tasks" aria-hidden="true"></i><span>Roles Management</span></a>
 							</li>
+							<li> 
+								<a href="{{route('menu')}}"><i class="la la-th-list" aria-hidden="true"></i><span>Menu Management</span></a>
+							</li>
 							<li class="menu-title"> 
 								<span>Profile Pages</span>
 							</li>

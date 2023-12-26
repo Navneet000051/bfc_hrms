@@ -93,8 +93,40 @@ class AdminController extends Controller
 
         return view('Admin.createclient');
     }
-    public function roles(){
+    public function roles(Request $request){
+        if ($request->ajax()) {
+            $data = roles::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function($row){
+                    if ($row->status == 1) {
+                        $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>';
+                    } else {
+                        $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>';
+                    }
+    
+                    $statusBtn .= '<div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+                    </div>';
+                    return $statusBtn;
+                })
+                ->addColumn('action', function($row){
+                    $actionBtn = '<div class="dropdown dropdown-action">
+                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                    </div>
+                </div>';
+                    return $actionBtn;
+                })
+                
+                ->rawColumns(['status','action'])
+                ->make(true);
+        }
         return view('Admin.manage-roles');
+        
     }
     public function AddRole(Request $request){
 
@@ -104,8 +136,58 @@ class AdminController extends Controller
         $roles->status = true;
         $roles->created_at = now();
         $roles->updated_at = now();
-        $roles->save();
+        if($roles->save()){
+            return redirect('roles')->with('success', 'Data save successfully');
+        }
 
-        // return view('Admin.manage-roles');
+    }
+
+    public function menu(Request $request){
+        if ($request->ajax()) {
+            $data = roles::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function($row){
+                    if ($row->status == 1) {
+                        $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>';
+                    } else {
+                        $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>';
+                    }
+    
+                    $statusBtn .= '<div class="dropdown-menu">
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+                    </div>';
+                    return $statusBtn;
+                })
+                ->addColumn('action', function($row){
+                    $actionBtn = '<div class="dropdown dropdown-action">
+                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                    </div>
+                </div>';
+                    return $actionBtn;
+                })
+                
+                ->rawColumns(['status','action'])
+                ->make(true);
+        }
+        return view('Admin.manage-menu');
+        
+    }
+    public function AddMenu(Request $request){
+
+        // dd($request->all());
+        $roles = new roles;
+        $roles->name = $request->roles;
+        $roles->status = true;
+        $roles->created_at = now();
+        $roles->updated_at = now();
+        if($roles->save()){
+            return redirect('menu')->with('success', 'Data save successfully');
+        }
+
     }
 }

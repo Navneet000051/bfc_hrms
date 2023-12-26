@@ -29,6 +29,9 @@
 		<!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
+        <!-- External CSS -->
+        <link rel="stylesheet" href="{{url('assets/css/externalcss.css')}}">
+
         <!-- Datetimepicker CSS -->
 		<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
 		

@@ -45,5 +45,9 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
     Route::post('/roles',[AdminController::class,'AddRole'])->name('AddRole');
+    
+    Route::get('/menu',[AdminController::class,'menu'])->name('menu');
+
+    Route::post('/menu',[AdminController::class,'AddMenu'])->name('AddMenu');
 
 });
