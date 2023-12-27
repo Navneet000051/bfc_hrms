@@ -1,27 +1,32 @@
 @extends('include.master')
 @section('content')
 <style>
-	@media only screen and (min-width:890px){
-		.col-md-2{
-		width:20%;
+	@media only screen and (min-width:890px) {
+		.col-md-2 {
+			width: 20%;
+		}
+
 	}
-	
-	}
-	.select2-container .select2-selection.select2-selection--single {
-    border: 1px solid #dcdcdc;
+    .form-focus .form-control {
     height: 50px;
+    padding: 10px 12px 6px;
 }
-.text-gray{
-	color:#888888;
-	font-family: 'Nunito Sans', sans-serif;
-}	
-.sub-btn{
-	height: 49px;
-    line-height: 35px;
-}
+	.select2-container .select2-selection.select2-selection--single {
+		border: 1px solid #dcdcdc;
+		height: 50px;
+	}
+
+	.text-gray {
+		color: #888888;
+		font-family: 'Nunito Sans', sans-serif;
+	}
+
+	.sub-btn {
+		height: 49px;
+		line-height: 35px;
+	}
 </style>
-<!-- Main Wrapper -->
-<div class="main-wrapper">
+
 
 	<!-- Page Wrapper -->
 	<div class="page-wrapper">
@@ -44,83 +49,85 @@
 			</div>
 			<!-- /Page Header -->
 			<!-- Inset Form --->
+			<form action="{{route('AddMenu')}}" method="post" enctype="multipart/form-data" id="AddForm">
+				@csrf
+
 			<div class="container mb-5" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
 				<div class="row pt-3 pb-2 employee">
+			
 					<h4 class="text-center pb-2 heading"><i class="fa-solid fa-plus"></i>Add Menu</h4>
-                    
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray focus-label">Main Menu</label>
-						<div class="input-block mb-3 form-focus">
-							<select class="select floating">
-								<option value="0">Parent Menu</option>
-								<option>Global Technologies</option>
-								<option>Delta Infotech</option>
-							</select>
-							<label class="focus-label">Company</label>
-						</div>
-					</div>
 					
-                             
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Menu Label</label>
-						<div class="input-block mb-3 form-focus">
-							<select class="select floating" id="menuLabelSelect" onchange="choseLabel()">
-								<option value="single">Single Menu</option>
-								<option value="double">Double Menu</option>
-							</select>
-							<label class="focus-label">Company</label>
+						<div class="col-sm-12 col-md-3">
+							<label class="text-gray focus-label">Main Menu</label>
+							<div class="input-block mb-3 form-focus">
+								<select class="select floating" name="parent">
+									<option value="0" selected>Parent Menu</option>
+									<option>Global Technologies</option>
+									<option>Delta Infotech</option>
+								</select>
+								<label class="focus-label">Company</label>
+							</div>
 						</div>
-					</div>
 
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Menu Name</label>
-						<div class="input-block mb-3 form-focus">
-							<select class="select floating">
-								<option>Select Company</option>
-								<option>Global Technologies</option>
-								<option>Delta Infotech</option>
-							</select>
-							<label class="focus-label">Company</label>
+
+						<div class="col-sm-12 col-md-3 menu-label">
+							<label class="text-gray">Menu Label</label>
+							<div class="input-block mb-3 form-focus">
+								<select class="select floating" id="menuLabelSelect" onchange="choseLabel()" name="label">
+									<option value="1" selected>Single Menu</option>
+									<option value="2">Double Menu</option>
+									<option value="2">Tripal Menu</option>
+								</select>
+							
+							</div>
 						</div>
-					</div>
+
+						<div class="col-sm-12 col-md-3 d-none">
+							<label class="text-gray">Menu Name</label>
+							<div class="input-block mb-3 form-focus">
+								<select class="select floating" name="subparent">
+									<option value="0" selected>Select Company</option>
+									<option>Global Technologies</option>
+									<option>Delta Infotech</option>
+								</select>
+								<label class="focus-label">Company</label>
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3">
+							<label class="text-gray d-block">Menu Name</label>
+							<label class="text-gray d-none">Submenu Name</label>
+							<div class="input-block mb-3 form-focus">
+								<input type="text" class="form-control floating" name="name" placeholder="Menu Name">
+								<!-- <label class="focus-label">Menu Name</label> -->
+							</div>
+						</div>
+						
+						<div class="col-sm-12 col-md-3">
+							<label class="text-gray">Icon</label>
+							<div class="input-block mb-3 form-focus">
+								<input type="text" class="form-control floating" name="icon" placeholder="la la-home">
+								<!-- <label class="focus-label">la la-home</label> -->
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3">
+							<label class="text-gray">Url</label>
+							<div class="input-block mb-3 form-focus">
+								<input type="url" class="form-control floating" name="url" placeholder="Url">
+								<!-- <label class="focus-label">Url</label> -->
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-3 align-self-center">
+							<button type="submit" class="btn btn-success w-100 sub-btn"> Submit </button>
+						</div>
 					
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Menu Name</label>
-						<div class="input-block mb-3 form-focus">
-							<input type="text" class="form-control floating">
-							<label class="focus-label">Employee Name</label>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Sub Menu</label>
-						<div class="input-block mb-3 form-focus">
-							<input type="text" class="form-control floating">
-							<label class="focus-label">Employee Name</label>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Icon</label>
-						<div class="input-block mb-3 form-focus">
-							<input type="text" class="form-control floating">
-							<label class="focus-label">la la-home</label>
-						</div>
-					</div>
-					
-					<div class="col-sm-12 col-md-3">
-					<label class="text-gray">Main Menu</label>
-						<div class="input-block mb-3 form-focus">
-							<input type="url" class="form-control floating">
-							<label class="focus-label">Url</label>
-						</div>
-					</div>
-					
-					<div class="col-sm-12 col-md-3 align-self-center">
-					<a href="#" class="btn btn-success w-100 sub-btn"> Submit </a>
-					</div>
 
 				</div>
 
 			</div>
+			</form>
 			<!-- Inserts Employee Form --->
 			<!-- Search Filter -->
 			<div class="row filter-row">
@@ -261,8 +268,67 @@
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
+	<!-- <script type="text/javascript">
+       $('#AddForm').validate({
+		ignore:'input:hidden',
+		rules:{
+			name:{
+				required:true,
+			},
+			icon:{
+				required:true,
+			},
+			url:{
+				required:true,
+			}
+		}
+	   });
+	</script> -->
 	<script>
-		function choseLabel(){
+    $(document).ready(function() {
+        // Initialize form validation on the #AddForm element
+        $("#AddForm").validate({
+            rules: {
+                parent: "required",
+                menuLabelSelect: "required",
+                name: "required",
+                icon: "required",
+                url: {
+                    required: true,
+                    url: true  // Make sure the value is a valid URL
+                }
+            },
+            messages: {
+                parent: "Please select a Parent Menu",
+                menuLabelSelect: "Please select a Menu Label",
+                name: "Please enter the Menu Name",
+                icon: "Please enter the Icon",
+                url: {
+                    required: "Please enter the URL",
+                    url: "Please enter a valid URL"
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function(error, element) {
+                // Adjust the placement of the error message
+                error.addClass("invalid-feedback");
+                element.closest(".form-focus").append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                // Highlight error field
+                $(element).addClass("is-invalid").removeClass("is-valid");
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                // Unhighlight valid field
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            }
+        });
+    });
+</script>
+	<script>
+		$('#menuLabelSelect').prop('disabled', true);
+
+		function choseLabel() {
 			var id = $('#menuLabelSelect').val();
 			alert(id);
 		}

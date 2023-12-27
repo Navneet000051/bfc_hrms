@@ -50,4 +50,4 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::post('/menu',[AdminController::class,'AddMenu'])->name('AddMenu');
 
-});
+}); 

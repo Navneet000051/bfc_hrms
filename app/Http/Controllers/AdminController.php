@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\Datatables;
 use App\Models\roles;
+use App\Models\Menu;
 
 class AdminController extends Controller
 {
@@ -179,15 +180,15 @@ class AdminController extends Controller
     }
     public function AddMenu(Request $request){
 
-        // dd($request->all());
-        $roles = new roles;
-        $roles->name = $request->roles;
-        $roles->status = true;
-        $roles->created_at = now();
-        $roles->updated_at = now();
-        if($roles->save()){
-            return redirect('menu')->with('success', 'Data save successfully');
-        }
+        dd($request->all());
+        // $menu = new roles;
+        // $roles->name = $request->roles;
+        // $roles->status = true;
+        // $roles->created_at = now();
+        // $roles->updated_at = now();
+        // if($roles->save()){
+        //     return redirect('menu')->with('success', 'Data save successfully');
+        // }
 
     }
 }

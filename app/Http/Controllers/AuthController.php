@@ -37,7 +37,7 @@ class AuthController extends Controller
                     return redirect()->route('dashboard'); // Redirect to the Dashboard route 
                 } else {
                     return redirect('/')->with('error', 'Please enter correct password');
-                }
+                } 
             } else {
                 return redirect('/')->with('warning', 'Your Account is inactive');
             }
