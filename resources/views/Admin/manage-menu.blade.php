@@ -19,7 +19,7 @@
 	.text-gray {
 		color: #888888;
 		font-family: 'Nunito Sans', sans-serif;
-	}
+	} 
 
 	.sub-btn {
 		height: 49px;

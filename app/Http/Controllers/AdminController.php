@@ -180,15 +180,20 @@ class AdminController extends Controller
     }
     public function AddMenu(Request $request){
 
-        dd($request->all());
-        // $menu = new roles;
-        // $roles->name = $request->roles;
-        // $roles->status = true;
-        // $roles->created_at = now();
-        // $roles->updated_at = now();
-        // if($roles->save()){
-        //     return redirect('menu')->with('success', 'Data save successfully');
-        // }
+    //    dd($request->all());
+        $menu = new Menu;
+       
+        $menu->parent_id = $request->parent;
+        $menu->subparent_id = $request->subparent;
+        $menu->label = $request->label;
+        $menu->icon = $request->icon;
+        $menu->url = $request->url;
+        $menu->status = true;
+        $menu->created_at = now();
+        $menu->updated_at = now();
+        if($menu->save()){
+            return redirect('menu')->with('success', 'Data save successfully');
+        }
 
     }
 }
