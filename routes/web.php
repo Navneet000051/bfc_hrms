@@ -50,4 +50,7 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::post('/menu',[AdminController::class,'AddMenu'])->name('AddMenu');
 
+    Route::get('/getSubparentData/{parentId}',[AdminController::class,'getSubparentData'])->name('getSubparentData');
+
+
 }); 

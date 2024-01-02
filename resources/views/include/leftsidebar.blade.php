@@ -1,7 +1,7 @@
 <div class="sidebar" id="sidebar">
 				<div class="sidebar-inner slimscroll">
 					<div id="sidebar-menu" class="sidebar-menu">
-						<nav class="greedys sidebar-horizantal">
+						<!-- <nav class="greedys sidebar-horizantal">
 							<ul class="list-inline-item list-unstyled links">
 								<li class="menu-title"> 
 									<span>Main</span>
@@ -265,7 +265,7 @@
 									</ul>
 								</li>
 							</ul>
-						</nav>
+						</nav> -->
 						<ul class="sidebar-vertical">
 							<li class="menu-title"> 
 								<span>Main</span>
@@ -312,7 +312,7 @@
 			<!-- Two Col Sidebar -->
 			<div class="two-col-bar" id="two-col-bar">
 				<div class="sidebar sidebar-twocol" id="navbar-nav">
-					<div class="sidebar-left slimscroll">
+					<!-- <div class="sidebar-left slimscroll">
 						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 							<a class="nav-link active" id="v-pills-dashboard-tab" title="Dashboard" data-bs-toggle="pill" href="#v-pills-dashboard" role="tab" aria-controls="v-pills-dashboard" aria-selected="true">
 								<span class="material-icons-outlined">
@@ -505,10 +505,10 @@
 								</span>
 							</a>
 						</div>
-					</div>
+					</div> -->
 					
 					<div class="sidebar-right">
-						<div class="tab-content" id="v-pills-tabContent">
+						<!-- <div class="tab-content" id="v-pills-tabContent">
 							<div class="tab-pane fade show active" id="v-pills-dashboard" role="tabpanel" aria-labelledby="v-pills-dashboard-tab">
 								<p>Dashboard</p>
 								<ul>
@@ -899,7 +899,7 @@
 									<li><a href="javascript:void(0);">Level 3</a></li>
 								</ul>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>

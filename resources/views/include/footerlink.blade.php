@@ -1,6 +1,8 @@
-<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-<script src="assets/js/jquery-3.7.1.min.js"></script>
 
+<script src="assets/js/jquery-3.7.1.min.js"></script>
+<!-- Select2 JS -->
+<script src="assets/js/select2.min.js"></script>
+<script data-cfasync="false" src="assets/js/email-decode.min.js"></script>
 <!-- Bootstrap Core JS -->
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 
@@ -23,8 +25,7 @@
 <script src="assets/js/layout.js"></script>
 <script src="assets/js/theme-settings.js"></script>
 
-<!-- Select2 JS -->
-<script src="assets/js/select2.min.js"></script>
+
 <!-- Custom JS -->
 <script src="assets/js/app.js"></script>
 
