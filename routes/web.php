@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\changeStatusController;
 use App\Models\roles;
 
 /*
@@ -51,6 +52,6 @@ Route::middleware('admin.auth')->group(function () {
     Route::post('/menu',[AdminController::class,'AddMenu'])->name('AddMenu');
 
     Route::get('/getSubparentData/{parentId}',[AdminController::class,'getSubparentData'])->name('getSubparentData');
-
+    Route::post('/changeStatus',[changeStatusController::class,'changeStatus'])->name('changeStatus');
 
 }); 

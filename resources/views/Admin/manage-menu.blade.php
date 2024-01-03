@@ -187,11 +187,12 @@
 		<!-- /Search Filter -->
 
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="table-responsive">
-					<table class="table table-striped custom-table datatable">
-						<thead>
+		
+						<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table datatable">
+									<thead>
 							<tr>
 								<th>ID</th>
 								<th>Main Menu</th>
@@ -215,12 +216,12 @@
 								<td>9876543210</td>
 								<td>
 									<div class="dropdown action-label">
-										<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+										<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 											<i class="fa-regular fa-circle-dot text-success"></i> Active
 										</a>
 										<div class="dropdown-menu">
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+											<a class="dropdown-item" onclick="changeStatus('id','{{$menu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+											<a class="dropdown-item" onclick="changeStatus('id','{{$menu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
 										</div>
 									</div>
 								</td>
@@ -235,8 +236,7 @@
 								</td>
 							</tr>
 
-						</tbody>
-						<tbody>
+						
 							@foreach($menu->mainmenus as $mainMenu)
 							<!-- Display main menu data -->
 							<tr>
@@ -266,8 +266,7 @@
 									</div>
 								</td>
 							</tr>
-						</tbody>
-						<tbody>
+					
 							@foreach($mainMenu->submenus as $submenu)
 							<!-- Display submenu data -->
 							<tr>
@@ -371,22 +370,7 @@
 <!-- /Page Wrapper -->
 @endsection()
 @section('datatable')
-<!-- <script type="text/javascript">
-       $('#AddForm').validate({
-		ignore:'input:hidden',
-		rules:{
-			name:{
-				required:true,
-			},
-			icon:{
-				required:true,
-			},
-			url:{
-				required:true,
-			}
-		}
-	   });
-	</script> -->
+
 <script>
 	$(document).ready(function() {
 		// Initialize form validation on the #AddForm element
@@ -443,17 +427,6 @@
 			// and then retrieve it on the server-side when processing the form
 			$('#hiddenSelectedValue').val($('#menuLabelSelect').val());
 
-			function choseLabel1() {
-				var id = $('#menuLabelSelect').val();
-				alert(id)
-
-				if (id == '0') {
-					$('#subparent').html(`
-                    <option value="newOption1" selected>Select Menu</option>
-                          `);
-
-				}
-			}
 			// Continue with the form submission
 			return true;
 		});
@@ -482,7 +455,7 @@
 
 	function choseLabel1() {
 		var id = $('#menuLabelSelect').val();
-		alert(id);
+	
 		if (id !== '0') {
 			$('#subparent').removeClass('d-none');
 			$('#submenu').removeClass('d-none');
@@ -540,6 +513,35 @@
 			});
 		}
 	});
+</script>
+<script>
+function changeStatus(where_id, where_id_value, where_column, where_column_value, where_table) {
+    $.ajax({
+        url: '/changeStatus', // Replace with your Laravel route
+        type: 'POST',
+        data: {
+            "_token": "{{ csrf_token() }}",
+            "where_id": where_id,
+            "where_id_value": where_id_value,
+            "where_column": where_column,
+            "where_column_value": where_column_value,
+            "where_table": where_table,
+        },
+        success: function (data) {
+            if (data.status === 'success') {
+                // Display success message on the current page
+                alert('Update successful');
+            } else {
+                // Display error message on the current page
+                alert('Error: ' + data.message);
+            }
+        },
+        error: function (error) {
+            // Display generic error message on the current page
+            alert('An error occurred');
+        }
+    });
+}
 </script>
 
 
