@@ -31,6 +31,7 @@
 	@yield('datatable')
 	@yield('validationjs')
     @yield('toastralert')
+	@yield('changeStatus')
 		
     </body>
 </html> 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,13 +16,17 @@ class changeStatusController extends Controller
         $column = $request->where_column;
         $columnValue = $request->where_column_value;
 
-        if ($table && $id && $idValue && $column && $columnValue !== null) {
+        if ($table && $id && $idValue && $column !== null) {
             // Update status
-            DB::table($table)
+            $updateResult = DB::table($table)
                 ->where($id, $idValue)
                 ->update([$column => $columnValue]);
 
-            return response()->json(['status' => 'success']);
+            if ($updateResult !== false) {
+                return response()->json(['status' => 'success']);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Update Error']);
+            }
         } else {
             return response()->json(['status' => 'error', 'message' => 'Invalid parameters']);
         }

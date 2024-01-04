@@ -22,7 +22,10 @@
 		<!-- Lineawesome CSS -->
         <link rel="stylesheet" href="assets/css/line-awesome.min.css">
 		<link rel="stylesheet" href="assets/css/material.css">
-		
+
+        <!-- Feather CSS -->
+		<link rel="stylesheet" href="assets/plugins/icons/feather/feather.css">
+        
 		<!-- Chart CSS -->
 		<link rel="stylesheet" href="assets/plugins/morris/morris.css">
 		

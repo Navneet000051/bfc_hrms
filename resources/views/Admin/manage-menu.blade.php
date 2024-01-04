@@ -187,12 +187,12 @@
 		<!-- /Search Filter -->
 
 
-		
-						<div class="row">
-						<div class="col-md-12">
-							<div class="table-responsive">
-								<table class="table table-striped custom-table datatable">
-									<thead>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-striped custom-table datatable">
+						<thead>
 							<tr>
 								<th>ID</th>
 								<th>Main Menu</th>
@@ -216,88 +216,97 @@
 								<td>9876543210</td>
 								<td>
 									<div class="dropdown action-label">
-										<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-regular fa-circle-dot text-success"></i> Active
-										</a>
+										<?php if ($menu->status == 1) { ?>
+											<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+												<i class="fa-regular fa-circle-dot text-success"></i> Active
+											</a>
+										<?php } else {
+										?>
+											<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>
+										<?php
+
+										} ?>
 										<div class="dropdown-menu">
 											<a class="dropdown-item" onclick="changeStatus('id','{{$menu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-											<a class="dropdown-item" onclick="changeStatus('id','{{$menu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+											<a class="dropdown-item" onclick="changeStatus('id','{{$menu->id}}','status','0','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
 										</div>
 									</div>
 								</td>
 								<td class="text-end">
-									<div class="dropdown dropdown-action">
-										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-										</div>
-									</div>
+									<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{ $menu->id }}','0','0')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
 								</td>
 							</tr>
 
-						
-							@foreach($menu->mainmenus as $mainMenu)
-							<!-- Display main menu data -->
-							<tr>
-								<td>{{ $mainMenu->id }}</td>
-								<td>{{ $menu->name }}</td>
-								<td>{{ $mainMenu->name }}</td>
-								<td></td>
-								<td>9876543210</td>
-								<td>
-									<div class="dropdown action-label">
-										<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-regular fa-circle-dot text-success"></i> Active
-										</a>
+							<?php if ($menu->status == 1) { ?>
+								@foreach($menu->mainmenus as $mainMenu)
+
+								<!-- Display main menu data -->
+
+								<tr>
+									<td>{{ $mainMenu->id }}</td>
+									<td>{{ $menu->name }}</td>
+									<td>{{ $mainMenu->name }}</td>
+									<td></td>
+									<td>9876543210</td>
+									<td>
+										<div class="dropdown action-label">
+											<?php if ($mainMenu->status == 1) { ?>
+												<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+													<i class="fa-regular fa-circle-dot text-success"></i> Active
+												</a>
+											<?php } else {
+											?>
+												<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>
+											<?php
+											}
+											?>
+											<div class="dropdown-menu">
+												<a class="dropdown-item" onclick="changeStatus('id','{{$mainMenu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+												<a class="dropdown-item" onclick="changeStatus('id','{{$mainMenu->id}}','status','0','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+											</div>
+										</div>
+									</td>
+									<td class="text-end">
+										<!-- <ul class="icons-list"><li><i class="fe fe-edit"></i></li><li><i class="fe fe-trash-2"></i></li></ul> -->
+										<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
+
+									</td>
+								</tr>
+								<?php if ($mainMenu->status == 1) { ?>
+									@foreach($mainMenu->submenus as $submenu)
+									<!-- Display submenu data -->
+									<tr>
+										<td>{{ $submenu->id }}</td>
+										<td>{{ $menu->name }}</td>
+										<td>{{ $mainMenu->name }}</td>
+										<td>{{ $submenu->name }}</td>
+										<td>9876543210</td>
+										<td>
+										<div class="dropdown action-label">
+										<?php if ($submenu->status == 1) { ?>
+											<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+												<i class="fa-regular fa-circle-dot text-success"></i> Active
+											</a>
+										<?php } else {
+										?>
+											<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>
+										<?php
+
+										} ?>
 										<div class="dropdown-menu">
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+											<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+											<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','0','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
 										</div>
 									</div>
-								</td>
-								<td class="text-end">
-									<div class="dropdown dropdown-action">
-										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-										</div>
-									</div>
-								</td>
-							</tr>
-					
-							@foreach($mainMenu->submenus as $submenu)
-							<!-- Display submenu data -->
-							<tr>
-								<td>{{ $submenu->id }}</td>
-								<td>{{ $menu->name }}</td>
-								<td>{{ $mainMenu->name }}</td>
-								<td>{{ $submenu->name }}</td>
-								<td>9876543210</td>
-								<td>
-									<div class="dropdown action-label">
-										<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-regular fa-circle-dot text-success"></i> Active
-										</a>
-										<div class="dropdown-menu">
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-											<a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
-										</div>
-									</div>
-								</td>
-								<td class="text-end">
-									<div class="dropdown dropdown-action">
-										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-											<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-										</div>
-									</div>
-								</td>
-							</tr>
-							@endforeach
-							@endforeach
+										</td>
+										<td class="text-end">
+											<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
+										</td>
+									</tr>
+									@endforeach
+								<?php } ?>
+								@endforeach
+							<?php } ?>
 							@endforeach
 						</tbody>
 
@@ -455,7 +464,7 @@
 
 	function choseLabel1() {
 		var id = $('#menuLabelSelect').val();
-	
+
 		if (id !== '0') {
 			$('#subparent').removeClass('d-none');
 			$('#submenu').removeClass('d-none');
@@ -514,35 +523,6 @@
 		}
 	});
 </script>
-<script>
-function changeStatus(where_id, where_id_value, where_column, where_column_value, where_table) {
-    $.ajax({
-        url: '/changeStatus', // Replace with your Laravel route
-        type: 'POST',
-        data: {
-            "_token": "{{ csrf_token() }}",
-            "where_id": where_id,
-            "where_id_value": where_id_value,
-            "where_column": where_column,
-            "where_column_value": where_column_value,
-            "where_table": where_table,
-        },
-        success: function (data) {
-            if (data.status === 'success') {
-                // Display success message on the current page
-                alert('Update successful');
-            } else {
-                // Display error message on the current page
-                alert('Error: ' + data.message);
-            }
-        },
-        error: function (error) {
-            // Display generic error message on the current page
-            alert('An error occurred');
-        }
-    });
-}
-</script>
 
 
 <script type="text/javascript">
@@ -586,5 +566,24 @@ function changeStatus(where_id, where_id_value, where_column, where_column_value
 		});
 	});
 </script>
+<script>
+	function deleteMenu(where_id,where_parent_id,where_subparent_id){
+		$.ajax({
+			url:'/deleteMenu',
+			type: 'POST',
+        data: {
+            "_token": "{{ csrf_token() }}",
+            "where_id": where_id,
+            "where_parent_id": where_parent_id,
+            "where_subparent_id": where_subparent_id,
+        },
+		success: function(data){
 
+		},
+		error:function(error){
+			
+		},
+		});
+	}
+</script>
 @endsection
