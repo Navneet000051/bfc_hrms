@@ -1,40 +1,40 @@
 
-<script src="assets/js/jquery-3.7.1.min.js"></script>
+<script src="{{ asset('assets/js/jquery-3.7.1.min.js')}}"></script>
 <!-- Select2 JS -->
-<script src="assets/js/select2.min.js"></script>
-<script data-cfasync="false" src="assets/js/email-decode.min.js"></script>
+<script src="{{ asset('assets/js/select2.min.js')}}"></script>
+<script data-cfasync="false" src="{{ asset('assets/js/email-decode.min.js')}}"></script>
 <!-- Bootstrap Core JS -->
-<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 
 <!-- Slimscroll JS -->
-<script src="assets/js/jquery.slimscroll.min.js"></script>
+<script src="{{ asset('assets/js/jquery.slimscroll.min.js')}}"></script>
 
 <!-- Chart JS -->
-<script src="assets/plugins/morris/morris.min.js"></script>
-<script src="assets/plugins/raphael/raphael.min.js"></script>
-<script src="assets/js/chart.js"></script>
-<script src="assets/js/greedynav.js"></script>
+<script src="{{ asset('assets/plugins/morris/morris.min.js')}}"></script>
+<script src="{{ asset('assets/plugins/raphael/raphael.min.js')}}"></script>
+<script src="{{ asset('assets/js/chart.js')}}"></script>
+<script src="{{ asset('assets/js/greedynav.js')}}"></script>
 
 <!-- Datatable JS -->
 
 <!-- <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script> -->
-<script src="assets/js/jquery.dataTables.min.js"></script>
-		<script src="assets/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
+		<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
         
 <!-- Theme Settings JS -->
-<script src="assets/js/layout.js"></script>
-<script src="assets/js/theme-settings.js"></script>
+<script src="{{ asset('assets/js/layout.js')}}"></script>
+<script src="{{ asset('assets/js/theme-settings.js')}}"></script>
 
 
 <!-- Custom JS -->
-<script src="assets/js/app.js"></script>
+<script src="{{ asset('assets/js/app.js')}}"></script>
 
 
 		<!-- Feather Icon JS -->
-		<script src="assets/js/feather.min.js"></script>
+		<script src="{{ asset('assets/js/feather.min.js')}}"></script> 
         
 <!-- Fileupload JS -->
-<script src="assets/plugins/fileupload/fileupload.min.js"></script>
+<script src="{{ asset('assets/plugins/fileupload/fileupload.min.js')}}"></script>
 
 <!-- form-validation cdn--->
 
@@ -42,8 +42,8 @@
  
 		
 		<!-- Datetimepicker JS -->
-		<script src="assets/js/moment.min.js"></script>
-		<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="{{ asset('assets/js/moment.min.js')}}"></script>
+		<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
 		
 <!--- dropify cdn JS--->
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>

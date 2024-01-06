@@ -154,7 +154,7 @@ class AdminController extends Controller
         }
     }
 
-    public function menu(Request $request)
+    public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
         // if ($request->ajax())
         //  {
@@ -203,91 +203,118 @@ class AdminController extends Controller
         //             ->get();
         //     }
         // }
-       
+        if ($parentId == 0 && $subparentId == 0 && $Id > 0) {
+            $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
+        }
+        if ($parentId > 0 && $subparentId == 0 && $Id > 0) {
+            $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
+        }
+        if ($parentId > 0 && $subparentId > 0 && $Id > 0) {
+            $data['selectedmenu'] = Menu::join('menus as subparent', 'menus.subparent_id', '=', 'subparent.id')
+                ->where('menus.parent_id', $parentId)
+                ->where('menus.subparent_id', $subparentId)
+                ->where('menus.id', $Id)
+                ->select('menus.*', 'subparent.name as subparent_name')
+                ->first();
+        }
+
         $helperfunction1_res = MenusHelper::getMenuHierarchies();
-        // echo $helperfunction1_res; die; 
-        //  return view('Admin.manage-menu')->with($data);
         $data['menus'] = $helperfunction1_res;
         $data['tableName'] = (new Menu)->getTable();
         return view('Admin.manage-menu', $data);
     }
     public function AddMenu(Request $request)
     {
-
-        //    dd($request->all());
+//    dd($reques t->all());
         $menu = new Menu;
-
-        $menu->parent_id = $request->parent;
-        if ($request->subparent == null) {
-            $subparent_id = 0;
+        if (($request->id != '') && ($request->pid != '') && ($request->sid != '')) {
+            // dd('hii');
+            $updatedata = [
+                'name' => $request->name,
+                'icon' => $request->icon,
+                'url' => $request->url
+            ];
+            if(Menu::where('id', '!=' ,$request->id)->where('name' ,$request->name)->exists()){
+                return redirect('menu')->with('warning', 'Duplicate entry not allowed');
+            }
+           else{
+            $affectedRows = Menu::where('id', $request->id)
+            ->where('parent_id', $request->pid)
+            ->where('subparent_id', $request->sid)
+            ->update($updatedata);
+            if ($affectedRows > 0) {
+            return redirect('menu')->with('success', 'Data updated successfully');
         } else {
-            $subparent_id = $request->subparent;
+            return redirect('menu')->with('error', 'Data not updated');
         }
-        $menu->subparent_id = $subparent_id;
-        $menu->label = $request->label;
-        $menu->name = $request->name;
-        $menu->icon = $request->icon;
-        $menu->url = $request->url;
-        $menu->status = true;
-        $menu->created_at = now();
-        $menu->updated_at = now();
-        if ($request->parent == 0 && $subparent_id == 0) {
+
+           }
            
-            if (Menu::where('parent_id', '!=', 0)->where('subparent_id', 0)->where('name', $request->name)->exists()) { 
-                $getdata = Menu::where('parent_id', '!=', 0)->where('subparent_id', 0)->where('name', $request->name)->exists();
-            }
-            elseif (Menu::where('parent_id', '!=', 0)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists()) {
-                $getdata = Menu::where('parent_id', '!=', 0)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists();
-            }
-            elseif(Menu::where('parent_id', 0)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
-                
-                $getdata = Menu::where('parent_id', 0)->where('subparent_id', 0)->where('name', $request->name)->exists();  
-            }
-            else{
-                $getdata = false;
-            }
-        }
-   
-        if ($request->parent != 0 && $subparent_id == 0) {
-            if (Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
-                echo 11;
-                $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists();
-            }
-            elseif (Menu::where('parent_id', 0)->where('name', $request->name)->exists()) {
-                echo 2;
-                $getdata = Menu::where('parent_id', 0)->where('name', $request->name)->exists();
-            } 
-            elseif(Menu::where('parent_id', $request->parent)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists()) {
-                echo 3;
-                $getdata =  $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists();
-            }
-            else{
-                $getdata = false;
-            }
-        }
-        if ($request->parent != 0 && $subparent_id != 0) {
-
-            if (Menu::where('parent_id', $request->parent)->where('subparent_id', $subparent_id)->where('name', $request->name)->exists()) {
-                $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', $subparent_id)->where('name', $request->name)->exists();
-            }
-            elseif (Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
-                $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists();
-            }
-            elseif (Menu::where('parent_id', 0)->where('name', $request->name)->exists()) {
-                $getdata = Menu::where('parent_id', 0)->where('name', $request->name)->exists();
-            }
-            else{
-                $getdata = false;
-            }
-        }
-        // dd($getdata);
-        if ($getdata) {
-            return redirect('menu')->with('error', 'Duplicate Entry not allowed');
+               
         } else {
-            if ($menu->save()) {
-                return redirect('menu')->with('success', 'Data save successfully');
+            $menu->parent_id = $request->parent;
+            if ($request->subparent == null) {
+                $subparent_id = 0;
             } else {
-                return redirect('menu')->with('error', 'Data not saved');
+                $subparent_id = $request->subparent;
+            }
+            $menu->subparent_id = $subparent_id;
+            $menu->label = $request->label;
+            $menu->name = $request->name;
+            $menu->icon = $request->icon;
+            $menu->url = $request->url;
+            $menu->status = true;
+            $menu->created_at = now();
+            $menu->updated_at = now();
+            if ($request->parent == 0 && $subparent_id == 0) {
+
+                if (Menu::where('parent_id', '!=', 0)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
+                    $getdata = Menu::where('parent_id', '!=', 0)->where('subparent_id', 0)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', '!=', 0)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists()) {
+                    $getdata = Menu::where('parent_id', '!=', 0)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', 0)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
+
+                    $getdata = Menu::where('parent_id', 0)->where('subparent_id', 0)->where('name', $request->name)->exists();
+                } else {
+                    $getdata = false;
+                }
+            }
+
+            if ($request->parent != 0 && $subparent_id == 0) {
+                if (Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
+                    echo 11;
+                    $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', 0)->where('name', $request->name)->exists()) {
+                    echo 2;
+                    $getdata = Menu::where('parent_id', 0)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', $request->parent)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists()) {
+                    echo 3;
+                    $getdata =  $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', '!=', 0)->where('name', $request->name)->exists();
+                } else {
+                    $getdata = false;
+                }
+            }
+            if ($request->parent != 0 && $subparent_id != 0) {
+
+                if (Menu::where('parent_id', $request->parent)->where('subparent_id', $subparent_id)->where('name', $request->name)->exists()) {
+                    $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', $subparent_id)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists()) {
+                    $getdata = Menu::where('parent_id', $request->parent)->where('subparent_id', 0)->where('name', $request->name)->exists();
+                } elseif (Menu::where('parent_id', 0)->where('name', $request->name)->exists()) {
+                    $getdata = Menu::where('parent_id', 0)->where('name', $request->name)->exists();
+                } else {
+                    $getdata = false;
+                }
+            }
+            // dd($getdata);
+            if ($getdata) {
+                return redirect('menu')->with('error', 'Duplicate Entry not allowed');
+            } else {
+                if ($menu->save()) {
+                    return redirect('menu')->with('success', 'Data save successfully');
+                } else {
+                    return redirect('menu')->with('error', 'Data not saved');
+                }
             }
         }
     }
@@ -296,5 +323,9 @@ class AdminController extends Controller
         // Use Eloquent to fetch subparent data based on the selected parent ID
         $subparentData = Menu::where('parent_id', $parentId)->where('subparent_id', 0)->get();
         return response()->json($subparentData);
+    }
+     
+    public function deleteMenu(request $request){
+
     }
 }

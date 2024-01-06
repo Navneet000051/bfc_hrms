@@ -47,30 +47,42 @@
 						<li class="breadcrumb-item active">Manage Menu</li>
 					</ul>
 				</div>
-
+				@if(!empty($selectedmenu))
+				<div class="col-auto float-end ms-auto">
+					<a href="{{route('menu')}}" class="btn add-btn"><i class="fa-solid fa-plus"></i> Add Menu</a>
+					
+				</div>
+				@endif
 			</div>
 		</div>
 		<!-- /Page Header -->
 		<!-- Inset Form --->
 		<form action="{{route('AddMenu')}}" method="post" enctype="multipart/form-data" id="AddForm">
 			@csrf
-
+			<input type="hidden" name="id" @if(!empty($selectedmenu)) value="{{$selectedmenu->id}}" @endif>
+			<input type="hidden" name="pid" @if(!empty($selectedmenu)) value="{{$selectedmenu->parent_id}}" @endif>
+			<input type="hidden" name="sid" @if(!empty($selectedmenu)) value="{{$selectedmenu->subparent_id}}" @endif>
 			<div class="container mb-5" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
 				<div class="row pt-3 pb-2 employee">
 
-					<h4 class="text-center pb-2 heading"><i class="fa-solid fa-plus"></i>Add Menu</h4>
+					<h4 class="text-center pb-2 heading">
+						<?php if (!empty($selectedmenu)) {
+							echo "Edit Menu";
+						} else {
+							echo "<i class='fa-solid fa-plus'> </i>Add Menu";
+						} ?>
+					</h4>
 
 
 					<div class="col-sm-12 col-md-3">
 						<label class="text-gray focus-label">Main Menu</label>
 						<div class="input-block mb-3 form-focus">
-							<select class="select floating" name="parent" id="parentSelect" onchange="choseLabel()">
-								<option value="0">Parent Menu</option>
+							<select class="select floating" name="parent" id="parentSelect" onchange="choseLabel()" @if(!empty($selectedmenu)){{'disabled'}} @endif>
+								<option value="0" @if(!empty($selectedmenu) && $selectedmenu->parent_id == 0) selected @endif>Parent Menu</option>
 
 								@foreach($menus as $menu)
-								<option value="{{ $menu->id }}">{{ $menu->name }}</option>
+								<option value="{{ $menu->id }}" @if(!empty($selectedmenu) && $selectedmenu->parent_id == $menu->id ) selected @endif> {{ $menu->name }}</option>
 								@endforeach
-
 							</select>
 
 						</div>
@@ -81,12 +93,25 @@
 						<label class="text-gray">Menu Label</label>
 						<div class="input-block mb-3 form-focus">
 							<select class="select floating" id="menuLabelSelect" onchange="handleMenuLabelChange()" name="label">
-								<option value="0" selected>Single Menu</option>
-								<option value="1">Double Menu</option>
+								<option value="0" @if(!empty($selectedmenu) && $selectedmenu->label == 0 ) selected @endif> Single Menu</option>
+								<option value="1" @if(!empty($selectedmenu) && $selectedmenu->label == 1) selected @endif>Double Menu</option>
 							</select>
 
 						</div>
 					</div>
+					@if(!empty($selectedmenu) && $selectedmenu->label >= 1)
+					<div class="col-sm-12 col-md-3">
+						<label class="text-gray">Menu Name</label>
+						<div class="input-block mb-3 form-focus">
+							<select class="select floating" disabled>
+								<option value="0" id="defaultselect" selected>{{$selectedmenu->subparent_name}}</option>
+
+							</select>
+
+						</div>
+					</div>
+					@endif
+
 
 					<div class="col-sm-12 col-md-3 d-none" id="subparent">
 						<label class="text-gray">Menu Name</label>
@@ -103,7 +128,7 @@
 						<label class="text-gray d-block" id="parentmenu">Menu Name</label>
 						<label class="text-gray d-none" id="submenu">Submenu Name</label>
 						<div class="input-block mb-3 form-focus">
-							<input type="text" class="form-control floating" name="name" placeholder="Menu Name">
+							<input type="text" class="form-control floating" name="name" placeholder="Menu Name" @if(!empty($selectedmenu)) value="{{ $selectedmenu->name }}" @endif>
 							<!-- <label class="focus-label">Menu Name</label> -->
 						</div>
 					</div>
@@ -111,7 +136,7 @@
 					<div class="col-sm-12 col-md-3">
 						<label class="text-gray">Icon</label>
 						<div class="input-block mb-3 form-focus">
-							<input type="text" class="form-control floating" name="icon" placeholder="la la-home">
+							<input type="text" class="form-control floating" name="icon" placeholder="la la-home" @if(!empty($selectedmenu)) value="{{ $selectedmenu->icon }}" @endif>
 							<!-- <label class="focus-label">la la-home</label> -->
 						</div>
 					</div>
@@ -119,7 +144,7 @@
 					<div class="col-sm-12 col-md-3">
 						<label class="text-gray">Url</label>
 						<div class="input-block mb-3 form-focus">
-							<input type="url" class="form-control floating" name="url" placeholder="Url">
+							<input type="url" class="form-control floating" name="url" placeholder="Url" @if(!empty($selectedmenu)) value="{{ $selectedmenu->url }}" @endif>
 							<!-- <label class="focus-label">Url</label> -->
 						</div>
 					</div>
@@ -233,8 +258,18 @@
 									</div>
 								</td>
 								<td class="text-end">
-									<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{ $menu->id }}','0','0')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
+									<li class="d-inline-flex">
+
+										<a href="{{ route('EditMenu', ['Id' => $menu->id, 'parentId' => $menu->parent_id, 'subparentId' => $menu->subparent_id]) }}">
+											<i class="fe fe-edit text-warning fs-5"></i>
+										</a> &nbsp;&nbsp;
+										<a onclick="deleteMenu('{{ $menu->id }}','0','0')">
+											<i class="fe fe-trash-2 text-danger fs-5"></i>
+										</a>
+									</li>
 								</td>
+
+
 							</tr>
 
 							<?php if ($menu->status == 1) { ?>
@@ -268,7 +303,12 @@
 									</td>
 									<td class="text-end">
 										<!-- <ul class="icons-list"><li><i class="fe fe-edit"></i></li><li><i class="fe fe-trash-2"></i></li></ul> -->
-										<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
+										<li class="d-inline-flex">
+											<a href="{{ route('EditMenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
+												<i class="fe fe-edit text-warning fs-5"></i>
+											</a> &nbsp;&nbsp;
+											<a onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
+										</li>
 
 									</td>
 								</tr>
@@ -282,25 +322,31 @@
 										<td>{{ $submenu->name }}</td>
 										<td>9876543210</td>
 										<td>
-										<div class="dropdown action-label">
-										<?php if ($submenu->status == 1) { ?>
-											<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-												<i class="fa-regular fa-circle-dot text-success"></i> Active
-											</a>
-										<?php } else {
-										?>
-											<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>
-										<?php
+											<div class="dropdown action-label">
+												<?php if ($submenu->status == 1) { ?>
+													<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+														<i class="fa-regular fa-circle-dot text-success"></i> Active
+													</a>
+												<?php } else {
+												?>
+													<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>
+												<?php
 
-										} ?>
-										<div class="dropdown-menu">
-											<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-											<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','0','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
-										</div>
-									</div>
+												} ?>
+												<div class="dropdown-menu">
+													<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','1','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+													<a class="dropdown-item" onclick="changeStatus('id','{{$submenu->id}}','status','0','{{$tableName}}')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+												</div>
+											</div>
 										</td>
 										<td class="text-end">
-											<li class="d-inline-flex"><a><i class="fe fe-edit text-warning fs-5"></i></a> &nbsp;&nbsp; <a onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a></li>
+											<li class="d-inline-flex">
+												<a href="{{ route('EditMenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
+													<i class="fe fe-edit text-warning fs-5"></i>
+												</a> &nbsp;&nbsp;
+												<a onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
+												<!-- href="#" data-bs-toggle="modal" data-bs-target="#delete_client" -->
+											</li>
 										</td>
 									</tr>
 									@endforeach
@@ -323,31 +369,6 @@
 
 	<!-- /Add Roles Modal -->
 
-	<!-- Edit Client Modal -->
-	<div id="edit_client" class="modal custom-modal fade" role="dialog">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Edit Client</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="input-block mb-3">
-							<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-							<input class="form-control" type="text">
-						</div>
-						<div class="submit-section">
-							<button class="btn btn-primary submit-btn">Submit</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /Edit Client Modal -->
 
 	<!-- Delete Client Modal -->
 	<div class="modal custom-modal fade" id="delete_client" role="dialog">
@@ -567,22 +588,22 @@
 	});
 </script>
 <script>
-	function deleteMenu(where_id,where_parent_id,where_subparent_id){
+	function deleteMenu(where_id, where_parent_id, where_subparent_id) {
 		$.ajax({
-			url:'/deleteMenu',
+			url: '/deleteMenu',
 			type: 'POST',
-        data: {
-            "_token": "{{ csrf_token() }}",
-            "where_id": where_id,
-            "where_parent_id": where_parent_id,
-            "where_subparent_id": where_subparent_id,
-        },
-		success: function(data){
+			data: {
+				"_token": "{{ csrf_token() }}",
+				"where_id": where_id,
+				"where_parent_id": where_parent_id,
+				"where_subparent_id": where_subparent_id,
+			},
+			success: function(data) {
 
-		},
-		error:function(error){
-			
-		},
+			},
+			error: function(error) {
+
+			},
 		});
 	}
 </script>
