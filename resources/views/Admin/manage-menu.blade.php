@@ -28,6 +28,7 @@
 		height: 49px;
 		line-height: 35px;
 	}
+	
 </style>
 
 
@@ -307,6 +308,7 @@
 											<a href="{{ route('EditMenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
 												<i class="fe fe-edit text-warning fs-5"></i>
 											</a> &nbsp;&nbsp;
+											
 											<a onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
 										</li>
 
@@ -344,6 +346,7 @@
 												<a href="{{ route('EditMenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
 													<i class="fe fe-edit text-warning fs-5"></i>
 												</a> &nbsp;&nbsp;
+											
 												<a onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
 												<!-- href="#" data-bs-toggle="modal" data-bs-target="#delete_client" -->
 											</li>
@@ -380,14 +383,22 @@
 						<p>Are you sure want to delete?</p>
 					</div>
 					<div class="modal-btn delete-action">
+					<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
+						@csrf
 						<div class="row">
+							<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
 							<div class="col-6">
-								<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+								<input type="hidden" name="type" value="delete" />
+								<input type="hidden" name="Id" id="delId" />
+								<input type="hidden" name="parentId" id="delParentId" />
+								<input type="hidden" name="subparentId" id="delSubparentId" />
+								<input type="submit" value="Delete" class="btn btn-primary continue-btn py-0 form-control w-100">
 							</div>
 							<div class="col-6">
 								<a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
 							</div>
 						</div>
+					</form>
 					</div>
 				</div>
 			</div>
@@ -508,6 +519,15 @@
 	}
 </script>
 <script>
+	function deleteMenu(where_id, where_parent_id, where_subparent_id){
+		$('#delete_client').modal('show');
+		$('#delId').val(where_id);
+		$('#delParentId').val(where_parent_id);
+		$('#delSubparentId').val(where_subparent_id);
+	}
+	
+</script>
+<script>
 	$(document).ready(function() {
 		// Event listener for the change event on the parent dropdown
 		$('#parentSelect').on('change', function() {
@@ -586,25 +606,5 @@
 
 		});
 	});
-</script>
-<script>
-	function deleteMenu(where_id, where_parent_id, where_subparent_id) {
-		$.ajax({
-			url: '/deleteMenu',
-			type: 'POST',
-			data: {
-				"_token": "{{ csrf_token() }}",
-				"where_id": where_id,
-				"where_parent_id": where_parent_id,
-				"where_subparent_id": where_subparent_id,
-			},
-			success: function(data) {
-
-			},
-			error: function(error) {
-
-			},
-		});
-	}
 </script>
 @endsection

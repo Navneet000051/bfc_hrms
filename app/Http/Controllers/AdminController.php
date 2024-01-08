@@ -156,68 +156,56 @@ class AdminController extends Controller
 
     public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
-        // if ($request->ajax())
-        //  {
 
-        //     $data = roles::latest()->get();
-        //     return Datatables::of($data)
-        //         ->addIndexColumn()
-        //         ->addColumn('status', function($row){
-        //             if ($row->status == 1) {
-        //                 $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>';
-        //             } else {
-        //                 $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive </a>';
-        //             }
+        if (!empty($request->type) && $request->type == "delete") {
+            // dd($request->all());
 
-        //             $statusBtn .= '<div class="dropdown-menu">
-        //                 <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-        //                 <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
-        //             </div>';
-        //             return $statusBtn;
-        //         })
-        //         ->addColumn('action', function($row){
-        //             $actionBtn = '<div class="dropdown dropdown-action">
-        //             <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-        //             <div class="dropdown-menu dropdown-menu-right">
-        //                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-        //                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-        //             </div>
-        //         </div>';
-        //             return $actionBtn;
-        //         })
-
-        //         ->rawColumns(['status','action'])
-        //         ->make(true);
-        // }
-
-
-        // $data['menus'] = Menu::where('parent_id', 0)->where('subparent_id', 0)->get();
-        // foreach ($data['menus'] as $parentMenu) {
-        //     $parentMenu->mainmenus = Menu::where('parent_id', $parentMenu->id)
-        //         ->where('subparent_id', 0)
-        //         ->get();
-
-        //     foreach ($parentMenu->mainmenus as $mainMenu) {
-        //         $mainMenu->submenus = Menu::where('parent_id',$mainMenu->parent_id)
-        //             ->where('subparent_id',$mainMenu->id)
-        //             ->get();
-        //     }
-        // }
-        if ($parentId == 0 && $subparentId == 0 && $Id > 0) {
-            $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
+            if ($request->parentId == 0 && $request->subparentId == 0 && $request->Id > 0) {
+                if (Menu::where('parent_id', $request->Id)->delete()) {
+                    if (Menu::where('id', $request->Id)->delete()) {
+                            return redirect('menu')->with('success', 'Data deleted successfully');
+                       
+                    } else {
+                        return redirect('menu')->with('error', 'Data not deleted');
+                    }
+                } else {
+                    return redirect('menu')->with('error', 'Data not deleted');
+                }
+            }
+            if ($request->parentId > 0 && $request->subparentId == 0 && $request->Id > 0) {
+                if (Menu::where('subparent_id', $request->Id)->delete()) {
+                    if (Menu::where('id', $request->Id)->delete()) {
+                        return redirect('menu')->with('success', 'Data deleted successfully');
+                    } else {
+                        return redirect('menu')->with('error', 'Data not deleted');
+                    }
+                } else {
+                    return redirect('menu')->with('error', 'Submenu not deleted');
+                }
+            }
+            if ($request->parentId > 0 && $request->subparentId > 0 && $request->Id > 0) {
+                if (Menu::where('parent_id', $request->parentId)->where('subparent_id', $request->subparentId)->where('id', $request->Id)->delete()) {
+                    return redirect('menu')->with('success', 'Data deleted successfully');
+                } else {
+                    return redirect('menu')->with('error', 'Data not Deleted');
+                }
+            }
+        } else {
+            if ($parentId == 0 && $subparentId == 0 && $Id > 0) {
+                $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
+            }
+            if ($parentId > 0 && $subparentId == 0 && $Id > 0) {
+                $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
+            }
+            if ($parentId > 0 && $subparentId > 0 && $Id > 0) {
+                $data['selectedmenu'] = Menu::join('menus as subparent', 'menus.subparent_id', '=', 'subparent.id')
+                    ->where('menus.parent_id', $parentId)
+                    ->where('menus.subparent_id', $subparentId)
+                    ->where('menus.id', $Id)
+                    ->select('menus.*', 'subparent.name as subparent_name')
+                    ->first();
+            }
         }
-        if ($parentId > 0 && $subparentId == 0 && $Id > 0) {
-            $data['selectedmenu'] = Menu::where('parent_id', $parentId)->where('subparent_id', $subparentId)->where('id', $Id)->first();
-        }
-        if ($parentId > 0 && $subparentId > 0 && $Id > 0) {
-            $data['selectedmenu'] = Menu::join('menus as subparent', 'menus.subparent_id', '=', 'subparent.id')
-                ->where('menus.parent_id', $parentId)
-                ->where('menus.subparent_id', $subparentId)
-                ->where('menus.id', $Id)
-                ->select('menus.*', 'subparent.name as subparent_name')
-                ->first();
-        }
-
         $helperfunction1_res = MenusHelper::getMenuHierarchies();
         $data['menus'] = $helperfunction1_res;
         $data['tableName'] = (new Menu)->getTable();
@@ -225,7 +213,7 @@ class AdminController extends Controller
     }
     public function AddMenu(Request $request)
     {
-//    dd($reques t->all());
+        //    dd($reques t->all());
         $menu = new Menu;
         if (($request->id != '') && ($request->pid != '') && ($request->sid != '')) {
             // dd('hii');
@@ -234,23 +222,19 @@ class AdminController extends Controller
                 'icon' => $request->icon,
                 'url' => $request->url
             ];
-            if(Menu::where('id', '!=' ,$request->id)->where('name' ,$request->name)->exists()){
+            if (Menu::where('id', '!=', $request->id)->where('name', $request->name)->exists()) {
                 return redirect('menu')->with('warning', 'Duplicate entry not allowed');
+            } else {
+                $affectedRows = Menu::where('id', $request->id)
+                    ->where('parent_id', $request->pid)
+                    ->where('subparent_id', $request->sid)
+                    ->update($updatedata);
+                if ($affectedRows > 0) {
+                    return redirect('menu')->with('success', 'Data updated successfully');
+                } else {
+                    return redirect('menu')->with('error', 'Data not updated');
+                }
             }
-           else{
-            $affectedRows = Menu::where('id', $request->id)
-            ->where('parent_id', $request->pid)
-            ->where('subparent_id', $request->sid)
-            ->update($updatedata);
-            if ($affectedRows > 0) {
-            return redirect('menu')->with('success', 'Data updated successfully');
-        } else {
-            return redirect('menu')->with('error', 'Data not updated');
-        }
-
-           }
-           
-               
         } else {
             $menu->parent_id = $request->parent;
             if ($request->subparent == null) {
@@ -324,8 +308,10 @@ class AdminController extends Controller
         $subparentData = Menu::where('parent_id', $parentId)->where('subparent_id', 0)->get();
         return response()->json($subparentData);
     }
-     
-    public function deleteMenu(request $request){
 
-    }
+    // public function deleteMenu(request $request){
+    //        if(Menu::where('parent_id')->delete()){
+
+    //        }
+    // }
 }
