@@ -24,7 +24,8 @@
 <!-- Theme Settings JS -->
 <script src="{{ asset('assets/js/layout.js')}}"></script>
 <script src="{{ asset('assets/js/theme-settings.js')}}"></script>
-
+<script src="{{ asset('assets/js/greedynav.js')}}"></script>
+		
 
 <!-- Custom JS -->
 <script src="{{ asset('assets/js/app.js')}}"></script>

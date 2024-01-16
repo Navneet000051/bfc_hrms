@@ -103,8 +103,11 @@ class AdminController extends Controller
 
         return view('Admin.createclient');
     }
-    public function roles(Request $request)
+
+    public function roles(Request $request, $id='')
     {
+        $data['getMenu'] = Menu::latest()->get();
+        $tableName = (new roles)->getTable();
         if ($request->ajax()) {
             $data = roles::latest()->get();
             return Datatables::of($data)
@@ -122,14 +125,18 @@ class AdminController extends Controller
                     </div>';
                     return $statusBtn;
                 })
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<div class="dropdown dropdown-action">
-                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_client"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_client"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                    </div>
-                </div>';
+                ->addColumn('action', function ($row) use ($tableName) {
+                    $encryptedId = encrypt($row->id);
+                    $actionBtn = '<li class="d-inline-flex">
+                            <a href="' . route('Updateroles', ['id' => $encryptedId]) . '">
+                                <i class="fe fe-edit action-btn fs-6"></i>
+                            </a> &nbsp;&nbsp;
+                        <a onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">
+                            <i class="fe fe-trash-2 action-btn fs-6"></i>
+                        </a> &nbsp;&nbsp;
+                        <a href="' . route('menuPermission', ['id' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;
+                        <a><i class="fe fe-plus-circle action-btn"></i></a>
+                    </li> ';
                     return $actionBtn;
                 })
 
@@ -152,6 +159,14 @@ class AdminController extends Controller
         } else {
             return redirect('roles')->with('Error', 'Data not saved');
         }
+    }
+
+    public function menuPermission(Request $request, $id=0){
+        $data['tableName'] = (new Menu)->getTable();
+        $helperfunction1_res = MenusHelper::getMenuHierarchies();
+        $data['menus'] = $helperfunction1_res;
+        $data['role_id'] = $id;
+        return view('Admin.menu-permission',$data);
     }
 
     public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')

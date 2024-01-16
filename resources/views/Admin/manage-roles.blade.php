@@ -83,7 +83,7 @@
 				<div class="col-md-12">
 					<div class="table-responsive">
 						<table id="yajradb" class="table table-striped w-100">
-							<thead> 
+							<thead>
 								<tr>
 									<th>Sr. No.</th>
 									<th>Role Id</th>
@@ -134,20 +134,76 @@
 		<!-- /Add Roles Modal -->
 
 		<!-- Edit Client Modal -->
-		<div id="edit_client" class="modal custom-modal fade" role="dialog">
-			<div class="modal-dialog modal-dialog-centered" role="document">
+		<!-- Add Client Modal -->
+		<div id="rolePermission" class="modal custom-modal fade" role="dialog">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Edit Client</h5>
+						<h5 class="modal-title">Role Permission</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
 						<form>
-							<div class="input-block mb-3">
-								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-								<input class="form-control" type="text">
+							<div class="table-responsive m-t-15">
+								<table class="table table-striped custom-table">
+									<thead>
+									
+										<tr>
+											<th>Main Menu</th>
+											<th class="text-center">Read</th>
+											<th class="text-center">Write</th>
+											<th class="text-center">Create</th>
+											<th class="text-center">Delete</th>
+											<th class="text-center">Import</th>
+											<th class="text-center">Export</th>
+										</tr>
+									</thead>
+									<tbody>
+									
+										<tr>
+											<td>Projects</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+													<input type="checkbox" checked>
+													<span class="checkmark"></span>
+												</label>
+											</td>
+										</tr>
+                                                              
+									</tbody>
+								</table>
 							</div>
 							<div class="submit-section">
 								<button class="btn btn-primary submit-btn">Submit</button>
@@ -189,6 +245,9 @@
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
+	<script>
+
+	</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(function() {
@@ -196,8 +255,7 @@
 					processing: true,
 					serverSide: true,
 					ajax: "{{ route('roles') }}",
-					columns: [
-						{
+					columns: [{
 							data: 'DT_RowIndex',
 							name: 'DT_RowIndex'
 						},
@@ -217,8 +275,8 @@
 							data: 'status',
 							name: 'status'
 						},
-						
-						
+
+
 						{
 							data: 'action',
 							name: 'action',
