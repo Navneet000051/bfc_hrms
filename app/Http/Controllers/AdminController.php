@@ -165,7 +165,7 @@ class AdminController extends Controller
         $data['tableName'] = (new Menu)->getTable();
         $helperfunction1_res = MenusHelper::getMenuHierarchies();
         $data['menus'] = $helperfunction1_res;
-        $data['role_id'] = $id;
+        $data['role_id'] = decrypt($id);
         return view('Admin.menu-permission',$data);
     }
 

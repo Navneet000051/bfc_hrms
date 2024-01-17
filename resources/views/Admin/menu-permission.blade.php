@@ -20,7 +20,7 @@
 				@if(!empty($selectedmenu))
 				<div class="col-auto float-end ms-auto">
 					<a href="{{route('menu')}}" class="btn add-btn"><i class="fa-solid fa-plus"></i> Add Menu</a>
-					
+
 				</div>
 				@endif
 			</div>
@@ -83,181 +83,169 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
-					<table class="table table-striped custom-table datatable">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Main Menu</th>
-								<th>Menu</th>
-								<th>Sub Menu</th>
-								<th>Menu</th>
-                                <th class="text-center">Read</th>
-								<th class="text-center">Write</th>
-								<th class="text-center">Create</th>
-								<th class="text-center">Delete</th>
-								<th class="text-center">Import</th>
-							</tr>
-						</thead>
-						<tbody>
-                            <?php $sr= 1;?>
-							@foreach($menus as $menu)
-							<!-- Display parent menu data -->
-							<tr>
-								<td>{{ $sr }}</td>
-								<td>{{ $menu->name }}</td>
-								<!-- Add other columns as needed -->
-								<td></td>
-								<td></td>
-							
-                                <td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-							</tr>
-
-							<?php if ($menu->status == 1) { ?>
-								@foreach($menu->mainmenus as $mainMenu)
-
-								<!-- Display main menu data -->
-
+					<form action="" method="post">
+						<table class="table table-striped custom-table datatable">
+							<thead>
 								<tr>
-									<td>{{ $sr }}</td>
-									<td>{{ $menu->name }}</td>
-									<td>{{ $mainMenu->name }}</td>
-									<td></td>
-								
-                                    <td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
+									<th>ID</th>
+									<th>Main Menu</th>
+									<th>Menu</th>
+									<th>Sub Menu</th>
+									<th>Menu</th>
+									<th class="text-center">Add</th>
+									<th class="text-center">Edit</th>
+									<th class="text-center">View</th>
+									<th class="text-center">Delete</th>
 								</tr>
-								<?php if ($mainMenu->status == 1) { ?>
-									@foreach($mainMenu->submenus as $submenu)
-									<!-- Display submenu data -->
+							</thead>
+							<tbody>
+								<?php $sr = 1; ?>
+								@foreach($menus as $menu)
+								<!-- Display parent menu data -->
+								<tr>
+									<td>{{ $sr++ }}</td>
+									<td>{{ $menu->name }}</td>
+									<!-- Add other columns as needed -->
+									<td></td>
+									<td></td>
+
+									<td class="text-center">
+										<label class="custom_check">
+										<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type')">
+											<span class="checkmark"></span>
+										</label>
+									</td>
+									<td class="text-center">
+										<label class="custom_check">
+											<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+											<span class="checkmark"></span>
+										</label>
+									</td>
+									<td class="text-center">
+										<label class="custom_check">
+										<input name="editstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+											<span class="checkmark"></span>
+										</label>
+									</td>
+									<td class="text-center">
+										<label class="custom_check">
+										<input name="viewstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+											<span class="checkmark"></span>
+										</label>
+									</td>
+									<td class="text-center">
+										<label class="custom_check">
+										<input name="deletestatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+											<span class="checkmark"></span>
+										</label>
+									</td>
+								</tr>
+
+								<?php if ($menu->status == 1) { ?>
+									@foreach($menu->mainmenus as $mainMenu)
+
+									<!-- Display main menu data -->
+
 									<tr>
-										<td>{{ $sr }}</td>
+										<td>{{ $sr++ }}</td>
 										<td>{{ $menu->name }}</td>
 										<td>{{ $mainMenu->name }}</td>
-										<td>{{ $submenu->name }}</td>
-										
-                                        <td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
+										<td></td>
+
+										<td class="text-center">
+											<label class="custom_check">
+											<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}')">
+												<span class="checkmark"></span>
+											</label>
+										</td>
+										<td class="text-center">
+											<label class="custom_check">
+											<input name="addstatus" type="checkbox" checked onclick="addStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}',1,'{{$role_id}}')">
+												<span class="checkmark"></span>
+											</label>
+										</td>
+										<td class="text-center">
+											<label class="custom_check">
+												<input type="checkbox" checked>
+												<span class="checkmark"></span>
+											</label>
+										</td>
+										<td class="text-center">
+											<label class="custom_check">
+												<input type="checkbox" checked>
+												<span class="checkmark"></span>
+											</label>
+										</td>
+										<td class="text-center">
+											<label class="custom_check">
+												<input type="checkbox" checked>
+												<span class="checkmark"></span>
+											</label>
+										</td>
+
 									</tr>
+									<?php if ($mainMenu->status == 1) { ?>
+										@foreach($mainMenu->submenus as $submenu)
+										<!-- Display submenu data -->
+										<tr>
+											<td>{{ $sr++ }}</td>
+											<td>{{ $menu->name }}</td>
+											<td>{{ $mainMenu->name }}</td>
+											<td>{{ $submenu->name }}</td>
+
+											<td class="text-center">
+												<label class="custom_check">
+												<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}')">
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+												<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+												<input name="editstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+												<input name="viewstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+													<span class="checkmark"></span>
+												</label>
+											</td>
+											<td class="text-center">
+												<label class="custom_check">
+												<input name="deletestatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+													<span class="checkmark"></span>
+												</label>
+											</td>
+										</tr>
+										@endforeach
+									<?php } ?>
 									@endforeach
 								<?php } ?>
 								@endforeach
-							<?php } ?>
-                            <?php $sr ++;?>
-							@endforeach
-						</tbody>
+							</tbody>
 
-					</table>
-
+						</table>
+					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- /Page Content -->
+	@endsection
+	@section('externaljs')
+	<script>
+		function menuStatus(checkbox, id, parentId, subparentId) {
+			// Get the value (12 for checked, 0 for unchecked)
+			var value = checkbox.checked ? 1 : 0;
+			alert(value);
+		}
+	</script>
 
-
-
-
-@endsection
+	@endsection

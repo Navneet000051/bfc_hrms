@@ -29,6 +29,7 @@
 		<!-- jQuery -->
     @include('include.footerlink')
 	@yield('datatable')
+	@yield('externaljs')
 	@yield('validationjs')
     @yield('toastralert')
 	@yield('changeStatus')
