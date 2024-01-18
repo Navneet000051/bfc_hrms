@@ -154,31 +154,31 @@
 
 										<td class="text-center">
 											<label class="custom_check">
-											<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}')">
+											<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}','type')">
 												<span class="checkmark"></span>
 											</label>
 										</td>
 										<td class="text-center">
 											<label class="custom_check">
-											<input name="addstatus" type="checkbox" checked onclick="addStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}',1,'{{$role_id}}')">
+											<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}','type',1)">
 												<span class="checkmark"></span>
 											</label>
 										</td>
 										<td class="text-center">
 											<label class="custom_check">
-												<input type="checkbox" checked>
+											<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}','type',1)">
 												<span class="checkmark"></span>
 											</label>
 										</td>
 										<td class="text-center">
 											<label class="custom_check">
-												<input type="checkbox" checked>
+											<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}','type',1)">
 												<span class="checkmark"></span>
 											</label>
 										</td>
 										<td class="text-center">
 											<label class="custom_check">
-												<input type="checkbox" checked>
+											<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $mainMenu->id }}','{{ $mainMenu->parent_id }}','{{ $mainMenu->subparent_id }}','{{$role_id}}','type',1)">
 												<span class="checkmark"></span>
 											</label>
 										</td>
@@ -195,31 +195,31 @@
 
 											<td class="text-center">
 												<label class="custom_check">
-												<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}')">
+												<input name="menustatus" type="checkbox" checked onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}','type')">
 													<span class="checkmark"></span>
 												</label>
 											</td>
 											<td class="text-center">
 												<label class="custom_check">
-												<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+												<input name="addstatus" type="checkbox" onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}','type',1)">
 													<span class="checkmark"></span>
 												</label>
 											</td>
 											<td class="text-center">
 												<label class="custom_check">
-												<input name="editstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+												<input name="editstatus" type="checkbox" onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}','type',1)">
 													<span class="checkmark"></span>
 												</label>
 											</td>
 											<td class="text-center">
 												<label class="custom_check">
-												<input name="viewstatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+												<input name="viewstatus" type="checkbox" onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}','type',1)">
 													<span class="checkmark"></span>
 												</label>
 											</td>
 											<td class="text-center">
 												<label class="custom_check">
-												<input name="deletestatus" type="checkbox" onclick="menuStatus(this,'{{ $menu->id }}','{{ $menu->parent_id }}','{{ $menu->subparent_id }}','{{$role_id}}','type',1)">
+												<input name="deletestatus" type="checkbox" onclick="menuStatus(this,'{{ $submenu->id }}','{{ $submenu->parent_id }}','{{ $submenu->subparent_id }}','{{$role_id}}','type',1)">
 													<span class="checkmark"></span>
 												</label>
 											</td>
@@ -241,11 +241,15 @@
 	@endsection
 	@section('externaljs')
 	<script>
-		function menuStatus(checkbox, id, parentId, subparentId) {
-			// Get the value (12 for checked, 0 for unchecked)
-			var value = checkbox.checked ? 1 : 0;
-			alert(value);
-		}
-	</script>
+    function menuStatus(checkbox, id, parentId, subparentId, roleId, type, menustatus = 0) {
+        var value = checkbox.checked ? 1 : 0;
+
+        // Call the menuStatus method from RolePermissionHelper class
+        var result = <?= \App\Helpers\RolePermissionHelper::menuStatus(checkbox, id, parentId, subparentId, roleId, type, menustatus = 0) ?>;
+
+        alert(result);
+    }
+</script>
+
 
 	@endsection

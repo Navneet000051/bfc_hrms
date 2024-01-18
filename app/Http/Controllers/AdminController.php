@@ -14,6 +14,7 @@ use App\Models\Menu;
 use Illuminate\Support\Facades\View;
 
 use App\Helpers\MenusHelper;
+use App\Helpers\rolePermissionHelper;
 // use MenusHelper;
 
 class AdminController extends Controller
@@ -166,6 +167,8 @@ class AdminController extends Controller
         $helperfunction1_res = MenusHelper::getMenuHierarchies();
         $data['menus'] = $helperfunction1_res;
         $data['role_id'] = decrypt($id);
+        $data['roleData'] = rolePermissionHelper::menuStatus();
+        dd($data['roleData'] );
         return view('Admin.menu-permission',$data);
     }
 
