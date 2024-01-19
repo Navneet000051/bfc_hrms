@@ -245,9 +245,7 @@
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
-	<script>
 
-	</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(function() {

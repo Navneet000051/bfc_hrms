@@ -135,7 +135,7 @@ class AdminController extends Controller
                         <a onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">
                             <i class="fe fe-trash-2 action-btn fs-6"></i>
                         </a> &nbsp;&nbsp;
-                        <a href="' . route('menuPermission', ['id' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;
+                        <a href="' . route('menuPermission', ['roleid' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;
                         <a><i class="fe fe-plus-circle action-btn"></i></a>
                     </li> ';
                     return $actionBtn;
@@ -162,17 +162,37 @@ class AdminController extends Controller
         }
     }
 
-    public function menuPermission(Request $request, $id=0){
+    public function menuPermission(Request $request, $roleid=0){
+       
         $data['tableName'] = (new Menu)->getTable();
         $helperfunction1_res = MenusHelper::getMenuHierarchies();
         $data['menus'] = $helperfunction1_res;
-        $data['role_id'] = decrypt($id);
-        $data['roleData'] = rolePermissionHelper::menuStatus();
-        dd($data['roleData'] );
+        $data['role_id'] = decrypt($roleid);
+        
+        // dd($data['roleData'] );
         return view('Admin.menu-permission',$data);
     }
+    public function handleMenuStatus(Request $request)
+    { 
 
-    public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
+    //     if (!empty($request->id && $request->parentId && $request->subparentId && $request->roleId && $request->type)) {}
+            $value = $request->value;
+            $id = $request->id;
+            $parentId = $request->parentId;
+            $subparentId = $request->subparentId;
+            $roleId = $request->roleId;
+            $type = $request->type;
+            $menustatus = $request->menustatus;
+
+            // Call the helper method and get the data
+            $result = RolePermissionHelper::menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus);
+
+            // Now $result contains the data returned by the helper
+            dd($result);  // This will print 'hii'
+       
+    }
+
+        public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
 
         if (!empty($request->type) && $request->type == "delete") {

@@ -46,7 +46,13 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/roles/{id}', [AdminController::class,'roles'])->name('Updateroles');
 
-    Route::get('/menuPermission/{id}', [AdminController::class,'menuPermission'])->name('menuPermission');
+    Route::get('/menuPermission/{roleid}', [AdminController::class,'menuPermission'])->name('menuPermission');
+
+    // Route::post('/menuPermission', [AdminController::class,'menuPermission'])->name('menuPermission');
+
+    Route::post('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
+
+    Route::get('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
 
     Route::post('/roles',[AdminController::class,'AddRole'])->name('AddRole');
     
