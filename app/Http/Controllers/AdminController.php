@@ -165,17 +165,15 @@ class AdminController extends Controller
     public function menuPermission(Request $request, $roleid=0){
        
         $data['tableName'] = (new Menu)->getTable();
-        $helperfunction1_res = MenusHelper::getMenuHierarchies();
+        // $helperfunction1_res1 = MenusHelper::getMenuHierarchies();
+        // $data['menus1'] = $helperfunction1_res1;
+        $helperfunction1_res = MenusHelper::getMenuHierarchiesWithPermissions();
         $data['menus'] = $helperfunction1_res;
         $data['role_id'] = decrypt($roleid);
-        
-        // dd($data['roleData'] );
         return view('Admin.menu-permission',$data);
     }
     public function handleMenuStatus(Request $request)
     { 
-
-    //     if (!empty($request->id && $request->parentId && $request->subparentId && $request->roleId && $request->type)) {}
             $value = $request->value;
             $id = $request->id;
             $parentId = $request->parentId;
@@ -184,11 +182,8 @@ class AdminController extends Controller
             $type = $request->type;
             $menustatus = $request->menustatus;
 
-            // Call the helper method and get the data
             $result = RolePermissionHelper::menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus);
-
-            // Now $result contains the data returned by the helper
-            dd($result);  // This will print 'hii'
+             return response()->json(['result' => $result['status']]);
        
     }
 

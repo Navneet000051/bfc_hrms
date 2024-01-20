@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('role_permissions', function (Blueprint $table) {
-            $table->boolean('menu_status')->default(true); // You can modify the column type and default value as needed
+            $table->boolean('menu_status')->default(0)->change(); // You can modify the column type and default value as needed
         });
     }
 

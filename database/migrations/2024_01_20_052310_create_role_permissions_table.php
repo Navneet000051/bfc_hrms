@@ -18,11 +18,12 @@ return new class extends Migration
             $table->integer('parentid')->default(0);
             $table->integer('subparentid')->default(0);
             $table->integer('menuid')->default(0);
-            $table->boolean('add')->default(1);
-            $table->boolean('view')->default(1);
-            $table->boolean('edit')->default(1);
-            $table->boolean('delete')->default(1);
+            $table->boolean('add')->default(0);
+            $table->boolean('view')->default(0);
+            $table->boolean('edit')->default(0);
+            $table->boolean('delete')->default(0);
             $table->boolean('status')->default(1);
+            $table->boolean('menu_status')->default(0);
         });
     }
 
