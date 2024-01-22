@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\changeStatusController;
+use App\Http\Controllers\DeleteController;
 use App\Models\roles;
 
 /*
@@ -50,7 +51,7 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::post('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
 
-    // Route::get('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
+    Route::delete('/deleteData',[DeleteController::class,'destroy'])->name('DeleteData');
 
     Route::post('/roles',[AdminController::class,'AddRole'])->name('AddRole');
     

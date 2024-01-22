@@ -32,6 +32,7 @@
 	@yield('externaljs')
 	@yield('validationjs')
     @yield('toastralert')
+	@yield('deleteData')
 	@yield('changeStatus')
 		
     </body>

@@ -107,7 +107,17 @@
 </script>
 
 @endsection('toastralert')
-
+@section('deleteData')
+<script>
+	function deleteData(where_column, where_id, where_table){
+		$('#delete_modal').modal('show');
+		$('#delColumn').val(where_column);
+		$('#delId').val(where_id);
+		$('#delTable').val(where_table);
+	}
+	
+</script>
+@endsection
 @section('changeStatus')
 <script>
 function changeStatus(where_id, where_id_value, where_column, where_column_value, where_table) {

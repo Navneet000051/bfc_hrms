@@ -21,6 +21,6 @@ class rolePermission extends Model
         'edit',
         'delete',
         'status',
-        'menustatus',
+        'menu_status',
     ];
 }

@@ -2,89 +2,169 @@
 
 namespace App\Helpers;
 
-use App\Models\rolePermission; // Replace YourModel with the actual model you want to use
+use App\Models\rolePermission;
 
 class RolePermissionHelper
 {
     public static function menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus)
     {
-        $rolePermission = new rolePermission;
-       
-        // Use the parameters to fetch or manipulate data
+        $data = [
+            'menuid' => $id,
+            'parentid' => $parentId,
+            'subparentid' => $subparentId,
+            'roleid' => $roleId,
+        ];
+
         if ($type == 'menu_status') {
-
+            // Additional conditions for menu_status when $parentId is not 0 and $subparentId is 0
             if ($parentId != 0 && $subparentId == 0) {
-                $existingPermission = rolePermission::where('roleid', $roleId)->where('menuid', $parentId)->first();
-                // Additional conditions for updating or creating records
-                if ($existingPermission) {
-                    if ($existingPermission->menu_status != 1) {
-                        if (rolePermission::where('roleid', $roleId)->where('menuid', $parentId)
-                    ->update(['menu_status' => $value])
-                ){
-                    // return ['status' => 'FIRST VALA UPDATED'];
-                }
-                      
+                $existingRecord = rolePermission::where('menuid', $parentId)
+                    ->where('roleid', $roleId)
+                    ->first();
+
+                if ($existingRecord) {
+                    // If menu_status is not 1, update it to 1
+                    if ($existingRecord->menu_status != 1) {
+                        $existingRecord->update(['menu_status' => 1]);
                     }
                 } else {
-                    $rolePermission = new rolePermission;
-                    $rolePermission->menuid = $parentId;
-                    $rolePermission->parentid = 0;
-                    $rolePermission->subparentid = 0;
-                    $rolePermission->roleid = $roleId;
-                    $rolePermission->menu_status = 1;
-    
-                    if ($rolePermission->save()) {
-                        return ['status' => 'FIRST VALA CREATED'];
-                    }
-                }
-            } 
-
-            if (rolePermission::where('roleid', $roleId)->where('menuid', $id)->exists()) {
-
-                if (rolePermission::where('roleid', $roleId)->where('menuid', $id)
-                    ->update(['menu_status' => $value])
-                ) {
-                    return ['status' => 'success']; // Successfully updated or created
-                } else {
-                    return ['status' => 'error']; // Successfully updated or created
-                }
-            } else {
-                $rolePermission->menuid = $id;
-                $rolePermission->parentid = $parentId;
-                $rolePermission->subparentid = $subparentId;
-                $rolePermission->roleid = $roleId;
-                $rolePermission->menu_status = $value;
-                if ($rolePermission->save()) {
-                    return 1;
-                } else {
-                    return ['status' => 'error']; // Successfully updated or created
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $parentId,
+                        'parentid' => 0,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                    ]);
                 }
             }
+            elseif ($parentId != 0 && $subparentId != 0) {
+                // Additional conditions for menu_status when $parentId is not 0 and $subparentId is not 0
+                $existingParentRecord = rolePermission::where('menuid', $parentId)
+                    ->where('roleid', $roleId)
+                    ->first();
+
+                if ($existingParentRecord) {
+                    // If menu_status is not 1, update it to 1
+                    if ($existingParentRecord->menu_status != 1) {
+                        $existingParentRecord->update(['menu_status' => 1]);
+                    }
+                } else {
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $parentId,
+                        'parentid' => 0,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                    ]);
+                }
+
+                $existingSubparentRecord = rolePermission::where('menuid', $subparentId)
+                    ->where('roleid', $roleId)
+                    ->first();
+
+                if ($existingSubparentRecord) {
+                    // If menu_status is not 1, update it to 1
+                    if ($existingSubparentRecord->menu_status != 1) {
+                        $existingSubparentRecord->update(['menu_status' => 1]);
+                    }
+                } else {
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $subparentId,
+                        'parentid' => $parentId,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                    ]);
+                }
+            }
+            else{
+
+            }
+
+
+            $data['menu_status'] = $value;
         } else {
+            // Additional conditions for other $type values when $parentId is not 0 and $subparentId is 0
+            if ($parentId != 0 && $subparentId == 0) {
+                $existingRecord = rolePermission::where('menuid', $parentId)
+                    ->where('roleid', $roleId)
+                    ->first();
 
-            if (rolePermission::where('roleid', $roleId)->where('menuid', $id)->exists()) {
-
-                $result = rolePermission::where('roleid', $roleId)->where('menuid', $id)
-                    ->update([$type => $value]);
-                if ($result) {
-                    return ['status' => 'success']; // Successfully updated or created
+                if ($existingRecord) {
+                    // If $type is not 1, update it to the provided value
+                    if ($existingRecord->menu_status != 1) {
+                        $existingRecord->update(['menu_status' => 1]);
+                    }
                 } else {
-                    return ['status' => 'error']; // Successfully updated or created
-                }
-            } else {
-                $rolePermission->menuid = $id;
-                $rolePermission->parentid = $parentId;
-                $rolePermission->subparentid = $subparentId;
-                $rolePermission->roleid = $roleId;
-                $rolePermission->menu_status = $menustatus;
-                $rolePermission->$type = $value;
-                if ($rolePermission->save()) {
-                    return ['status' => 'success']; // Successfully updated or created
-                } else {
-                    return ['status' => 'error']; // Successfully updated or created
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $parentId,
+                        'parentid' => 0,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                        $type => $value,
+                    ]);
                 }
             }
-        }
-    }
+            elseif ($parentId != 0 && $subparentId != 0) {
+                // Additional conditions for menu_status when $parentId is not 0 and $subparentId is not 0
+                $existingParentRecord = rolePermission::where('menuid', $parentId)
+                    ->where('roleid', $roleId)
+                    ->first();
 
+                if ($existingParentRecord) {
+                    // If menu_status is not 1, update it to 1
+                    if ($existingParentRecord->menu_status != 1) {
+                        $existingParentRecord->update(['menu_status' => 1]);
+                    }
+                } else {
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $parentId,
+                        'parentid' => 0,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                    ]);
+                }
+
+                $existingSubparentRecord = rolePermission::where('menuid', $subparentId)
+                    ->where('roleid', $roleId)
+                    ->first();
+
+                if ($existingSubparentRecord) {
+                    // If menu_status is not 1, update it to 1
+                    if ($existingSubparentRecord->menu_status != 1) {
+                        $existingSubparentRecord->update(['menu_status' => 1]);
+                    }
+                } else {
+                    // If no record found, insert a new record
+                    rolePermission::create([
+                        'menuid' => $subparentId,
+                        'parentid' => $parentId,
+                        'subparentid' => 0,
+                        'roleid' => $roleId,
+                        'menu_status' => 1,
+                    ]);
+                }
+            }
+            else{
+                
+            }
+
+            $data['menu_status'] = $menustatus;
+            $data[$type] = $value;
+        }
+        // dd($data);
+        rolePermission::updateOrCreate(
+            ['roleid' => $roleId, 'menuid' => $id],
+            $data
+        );
+
+        return ['status' => 'success']; // Successfully updated or created
+    }   
 }

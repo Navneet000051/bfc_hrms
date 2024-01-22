@@ -129,7 +129,7 @@ class AdminController extends Controller
                 ->addColumn('action', function ($row) use ($tableName) {
                     $encryptedId = encrypt($row->id);
                     $actionBtn = '<li class="d-inline-flex">
-                            <a href="' . route('Updateroles', ['id' => $encryptedId]) . '">
+                            <a onclick="showEdit(' . $row->id . ')">
                                 <i class="fe fe-edit action-btn fs-6"></i>
                             </a> &nbsp;&nbsp;
                         <a onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">

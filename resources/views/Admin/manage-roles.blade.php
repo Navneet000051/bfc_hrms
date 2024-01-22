@@ -134,76 +134,21 @@
 		<!-- /Add Roles Modal -->
 
 		<!-- Edit Client Modal -->
-		<!-- Add Client Modal -->
-		<div id="rolePermission" class="modal custom-modal fade" role="dialog">
-			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div id="edit_client" class="modal custom-modal fade" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Role Permission</h5>
+						<h5 class="modal-title">Add Department</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
-						<form>
-							<div class="table-responsive m-t-15">
-								<table class="table table-striped custom-table">
-									<thead>
-									
-										<tr>
-											<th>Main Menu</th>
-											<th class="text-center">Read</th>
-											<th class="text-center">Write</th>
-											<th class="text-center">Create</th>
-											<th class="text-center">Delete</th>
-											<th class="text-center">Import</th>
-											<th class="text-center">Export</th>
-										</tr>
-									</thead>
-									<tbody>
-									
-										<tr>
-											<td>Projects</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-											<td class="text-center">
-												<label class="custom_check">
-													<input type="checkbox" checked>
-													<span class="checkmark"></span>
-												</label>
-											</td>
-										</tr>
-                                                              
-									</tbody>
-								</table>
+						<form action="{{route('AddRole')}}" method="post">
+							@csrf
+							<div class="input-block mb-3">
+								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
+								<input class="form-control" name="roles" type="text">
 							</div>
 							<div class="submit-section">
 								<button class="btn btn-primary submit-btn">Submit</button>
@@ -216,36 +161,48 @@
 		<!-- /Edit Client Modal -->
 
 		<!-- Delete Client Modal -->
-		<div class="modal custom-modal fade" id="delete_client" role="dialog">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-body">
-						<div class="form-header">
-							<h3>Delete Client</h3>
-							<p>Are you sure want to delete?</p>
-						</div>
-						<div class="modal-btn delete-action">
-							<div class="row">
-								<div class="col-6">
-									<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
-								</div>
-								<div class="col-6">
-									<a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-								</div>
+	<div class="modal custom-modal fade" id="delete_modal" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="form-header">
+						<h3>Delete Client</h3>
+						<p>Are you sure want to delete?</p>
+					</div>
+					<div class="modal-btn delete-action">
+					<form action="{{route('DeleteData')}}" method="post" enctype="multipart/form-data">
+						@csrf
+						@method('DELETE')
+						<div class="row">
+							<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
+							<div class="col-6">
+								<input type="hidden" name="Id" id="delId" />
+								<input type="hidden" name="column" id="delColumn" />
+								<input type="hidden" name="table" id="delTable" />
+								<input type="submit" value="Delete" class="btn btn-primary continue-btn py-0 form-control w-100">
+							</div>
+							<div class="col-6">
+								<a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
 							</div>
 						</div>
+					</form>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- /Delete Client Modal -->
+	</div>
+	<!-- /Delete Client Modal -->
 
 	</div>
 
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
-
+<script>
+	function showEdit(id){
+      $('#edit_client').show();
+	}
+</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(function() {
