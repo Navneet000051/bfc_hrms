@@ -288,64 +288,58 @@
 	@endsection
 	@section('externaljs')
 	<script>
+	function menuStatus(checkbox, id, parentId, subparentId, roleId, menustatus = 0) {
+		var value = checkbox.checked ? 1 : 0;
+		var type = $(checkbox).closest('td').data('type');
 
-       
-        function menuStatus(checkbox, id, parentId, subparentId, roleId, menustatus = 0) {
-            var value = checkbox.checked ? 1 : 0;
-            var type = $(checkbox).closest('td').data('type');
-			showLoader();
-            // Make an AJAX request to the Laravel route
-            $.ajax({
-                url: '/rolePermission', // Update the route to your actual route
-                type: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    value: value,
-                    id: id,
-                    parentId: parentId,
-                    subparentId: subparentId,
-                    roleId: roleId,
-                    type: type,
-                    menustatus: menustatus
-                },
-                success: function (response) {
-                    // Handle the response from the server
-                    // Reload the page after success
-                    setTimeout(function () {
-                        location.reload();
-                    }, 100);
-                },
-                error: function (error) {
-                    // alert(response.result);
-                    console.error(error);
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000);
-                },
-                // complete: function () {
-                //     // Hide loader when the request is complete
-                //     hideLoader();
-                // }
-            });
-        }
+		// Show the loader before making the AJAX request
+		showLoader();
 
-        function showLoader() {
-            // Show the overlay and loader container
-            $('.overlay').show();
-            $('.loader-container').show();
-        }
+		// Make an AJAX request to the Laravel route
+		$.ajax({
+			url: '/rolePermission', // Update the route to your actual route
+			type: 'POST',
+			data: {
+				"_token": "{{ csrf_token() }}",
+				value: value,
+				id: id,
+				parentId: parentId,
+				subparentId: subparentId,
+				roleId: roleId,
+				type: type,
+				menustatus: menustatus
+			},
+			success: function(response) {
+				// Handle the response from the server
+				alert(response.result);
+				// Reload the page after success
+				location.reload();
+			},
+			error: function(error) {
+				console.error(error);
+				// Reload the page after error
+				location.reload();
+			},
+			complete: function() {
+				// Hide loader when the request is complete
+				hideLoader();
+			}
+		});
+	}
 
-        function hideLoader() {
-            // Hide the overlay and loader container
-            $('.overlay').hide();
-            $('.loader-container').hide();
-        }
-		$(window).on('load', function () {
-            hideLoader(); // Hide the loader when the entire page, including AJAX content, has loaded
-        });
+	function showLoader() {
+		// Show the overlay and loader container
+		$('.overlay').show();
+		$('.loader-container').show();
+	}
 
-   
+	function hideLoader() {
+		// Hide the overlay and loader container
+		$('.overlay').hide();
+		$('.loader-container').hide();
+	}
 </script>
+
 
 
 

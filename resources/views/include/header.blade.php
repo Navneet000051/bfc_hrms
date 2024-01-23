@@ -47,20 +47,20 @@
         <!-- Flag -->
         <li class="nav-item dropdown has-arrow flag-nav">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-                <img src="assets/img/flags/us.png" alt="Flag" height="20"> <span>English</span>
+                <img src="{{asset('assets/img/flags/us.png')}}" alt="Flag" height="20"> <span>English</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="assets/img/flags/us.png" alt="Flag" height="16"> English
+                    <img src="{{asset('assets/img/flags/us.png')}}" alt="Flag" height="16"> English
                 </a>
                 <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="assets/img/flags/fr.png" alt="Flag" height="16"> French
+                    <img src="{{asset('assets/img/flags/fr.png')}}" alt="Flag" height="16"> French
                 </a>
                 <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="assets/img/flags/es.png" alt="Flag" height="16"> Spanish
+                    <img src="{{asset('assets/img/flags/es.png')}}" alt="Flag" height="16"> Spanish
                 </a>
                 <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="assets/img/flags/de.png" alt="Flag" height="16"> German
+                    <img src="{{asset('assets/img/flags/de.png')}}" alt="Flag" height="16"> German
                 </a>
             </div>
         </li>

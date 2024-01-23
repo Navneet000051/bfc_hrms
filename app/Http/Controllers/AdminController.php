@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\View;
 
 use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
+use Illuminate\Support\Facades\Validator;
 // use MenusHelper;
 
 class AdminController extends Controller
@@ -105,9 +106,16 @@ class AdminController extends Controller
         return view('Admin.createclient');
     }
 
-    public function roles(Request $request, $id='')
+    public function roles(Request $request, $id = '')
     {
         $data['getMenu'] = Menu::latest()->get();
+        if ($id) {
+
+            $data['action'] = 'EditRole';
+            $data['roles'] = roles::find($id);
+            return view('Admin.modal', $data);
+        }
+
         $tableName = (new roles)->getTable();
         if ($request->ajax()) {
             $data = roles::latest()->get();
@@ -126,6 +134,7 @@ class AdminController extends Controller
                     </div>';
                     return $statusBtn;
                 })
+                
                 ->addColumn('action', function ($row) use ($tableName) {
                     $encryptedId = encrypt($row->id);
                     $actionBtn = '<li class="d-inline-flex">
@@ -136,7 +145,7 @@ class AdminController extends Controller
                             <i class="fe fe-trash-2 action-btn fs-6"></i>
                         </a> &nbsp;&nbsp;
                         <a href="' . route('menuPermission', ['roleid' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;
-                        <a><i class="fe fe-plus-circle action-btn"></i></a>
+                        
                     </li> ';
                     return $actionBtn;
                 })
@@ -148,46 +157,83 @@ class AdminController extends Controller
     }
     public function AddRole(Request $request)
     {
+        if (!empty($request->id)){
 
-        // dd($request->all());
-        $roles = new roles;
-        $roles->name = $request->roles;
-        $roles->status = true;
-        $roles->created_at = now();
-        $roles->updated_at = now();
-        if ($roles->save()) {
-            return redirect('roles')->with('success', 'Data save successfully');
-        } else {
-            return redirect('roles')->with('Error', 'Data not saved');
+            $id = $request->id;
+            $validator = Validator::make($request->changeStatusall(), [
+                'roles' => 'required|unique:roles,name,' . $id,
+
+            ]);
+
+            if ($validator->fails()) {
+                return back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', $validator->errors()->first('roles'));
+            }
+            if ($validator->passes()) {
+                $roles = roles::find($id);
+                $roles->name = $request->roles;
+                $roles->updated_at = now();
+
+                if ($roles->save()) {
+                    return redirect('roles')->with('success', 'Data updated successfully');
+                } else {
+                    return redirect('roles')->with('Error', 'Data not updated');
+                }
+            }
+        }
+        $validator = Validator::make($request->all(), [
+            'roles' => 'required|unique:roles,name,',
+
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', $validator->errors()->first('roles'));
+        }
+        if ($validator->passes()) {
+            $roles = new roles;
+            $roles->name = $request->roles;
+            $roles->status = true;
+            $roles->created_at = now();
+            $roles->updated_at = now();
+            if ($roles->save()) {
+                return redirect('roles')->with('success', 'Data save successfully');
+            } else {
+                return redirect('roles')->with('Error', 'Data not saved');
+            }
         }
     }
 
-    public function menuPermission(Request $request, $roleid=0){
-       
+    public function menuPermission(Request $request, $roleid = 0)
+    {
+
         $data['tableName'] = (new Menu)->getTable();
         // $helperfunction1_res1 = MenusHelper::getMenuHierarchies();
         // $data['menus1'] = $helperfunction1_res1;
         $helperfunction1_res = MenusHelper::getMenuHierarchiesWithPermissions();
         $data['menus'] = $helperfunction1_res;
         $data['role_id'] = decrypt($roleid);
-        return view('Admin.menu-permission',$data);
+        return view('Admin.menu-permission', $data);
     }
     public function handleMenuStatus(Request $request)
-    { 
-            $value = $request->value;
-            $id = $request->id;
-            $parentId = $request->parentId;
-            $subparentId = $request->subparentId;
-            $roleId = $request->roleId;
-            $type = $request->type;
-            $menustatus = $request->menustatus;
+    {
+        $value = $request->value;
+        $id = $request->id;
+        $parentId = $request->parentId;
+        $subparentId = $request->subparentId;
+        $roleId = $request->roleId;
+        $type = $request->type;
+        $menustatus = $request->menustatus;
 
-            $result = RolePermissionHelper::menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus);
-             return response()->json(['result' => $result['status']]);
-       
+        $result = RolePermissionHelper::menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus);
+        return response()->json(['result' => $result['status']]);
     }
 
-        public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
+    public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
 
         if (!empty($request->type) && $request->type == "delete") {
@@ -196,8 +242,7 @@ class AdminController extends Controller
             if ($request->parentId == 0 && $request->subparentId == 0 && $request->Id > 0) {
                 if (Menu::where('parent_id', $request->Id)->delete()) {
                     if (Menu::where('id', $request->Id)->delete()) {
-                            return redirect('menu')->with('success', 'Data deleted successfully');
-                       
+                        return redirect('menu')->with('success', 'Data deleted successfully');
                     } else {
                         return redirect('menu')->with('error', 'Data not deleted');
                     }

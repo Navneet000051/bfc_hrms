@@ -116,16 +116,20 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form action="{{route('AddRole')}}" method="post">
+						<form action="{{ route('AddRole') }}" method="post">
 							@csrf
 							<div class="input-block mb-3">
 								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
 								<input class="form-control" name="roles" type="text">
+								<!-- @error('roles')
+								<span class="text-danger">{{ $message }}</span>
+								@enderror -->
 							</div>
 							<div class="submit-section">
 								<button class="btn btn-primary submit-btn">Submit</button>
 							</div>
 						</form>
+
 					</div>
 				</div>
 			</div>
@@ -138,22 +142,13 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Add Department</h5>
+						<h5 class="modal-title">Edit Role</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
-						<form action="{{route('AddRole')}}" method="post">
-							@csrf
-							<div class="input-block mb-3">
-								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
-								<input class="form-control" name="roles" type="text">
-							</div>
-							<div class="submit-section">
-								<button class="btn btn-primary submit-btn">Submit</button>
-							</div>
-						</form>
+						
 					</div>
 				</div>
 			</div>
@@ -161,48 +156,54 @@
 		<!-- /Edit Client Modal -->
 
 		<!-- Delete Client Modal -->
-	<div class="modal custom-modal fade" id="delete_modal" role="dialog">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-body">
-					<div class="form-header">
-						<h3>Delete Client</h3>
-						<p>Are you sure want to delete?</p>
-					</div>
-					<div class="modal-btn delete-action">
-					<form action="{{route('DeleteData')}}" method="post" enctype="multipart/form-data">
-						@csrf
-						@method('DELETE')
-						<div class="row">
-							<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
-							<div class="col-6">
-								<input type="hidden" name="Id" id="delId" />
-								<input type="hidden" name="column" id="delColumn" />
-								<input type="hidden" name="table" id="delTable" />
-								<input type="submit" value="Delete" class="btn btn-primary continue-btn py-0 form-control w-100">
-							</div>
-							<div class="col-6">
-								<a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-							</div>
+		<div class="modal custom-modal fade" id="delete_modal" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="form-header">
+							<h3>Delete Client</h3>
+							<p>Are you sure want to delete?</p>
 						</div>
-					</form>
+						<div class="modal-btn delete-action">
+							<form action="{{route('DeleteData')}}" method="post" enctype="multipart/form-data">
+								@csrf
+								@method('DELETE')
+								<div class="row">
+									<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
+										<div class="col-6">
+											<input type="hidden" name="Id" id="delId" />
+											<input type="hidden" name="column" id="delColumn" />
+											<input type="hidden" name="table" id="delTable" />
+											<input type="submit" value="Delete" class="btn btn-primary continue-btn py-0 form-control w-100">
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- /Delete Client Modal -->
+		<!-- /Delete Client Modal -->
 
 	</div>
 
 	<!-- /Page Wrapper -->
 	@endsection()
 	@section('datatable')
-<script>
-	function showEdit(id){
-      $('#edit_client').show();
-	}
-</script>
+
+	<script>
+		function showEdit(id) {
+			$('#edit_client').modal("show");
+			$('#edit_client .modal-body').html("<center><i class= 'fa fa-2x fa-spin fa-spinner text-warning'></i></center>");
+
+			// Use proper concatenation to include the id in the route
+			$('#edit_client .modal-body').load("{{ route('Updateroles', ':id') }}".replace(':id', id));
+		}
+	</script>
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$(function() {
