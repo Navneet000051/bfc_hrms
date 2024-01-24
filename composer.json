@@ -32,7 +32,8 @@
         "files": [
             "app/Helpers/Helper.php",
             "app/Helpers/MenusHelper.php",
-            "app/Helpers/rolePermissionHelper.php"
+            "app/Helpers/rolePermissionHelper.php",
+            "app/Helpers/sideMenuHelper.php"
         ]
     },
     "autoload-dev": {

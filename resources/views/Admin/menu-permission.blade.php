@@ -50,83 +50,25 @@
 	<!-- Page Content -->
 	<div class="content container-fluid">
 
-		<div class="overlay"></div>
+		<!-- <div class="overlay"></div>
 		<div class="loader-container">
 			<div class="loader"></div>
-		</div>
+		</div> -->
 		<!-- Page Header -->
 		<div class="page-header">
 			<div class="row align-items-center">
 				<div class="col">
-					<h3 class="page-title">Roles</h3>
+					<h3 class="page-title">Menu Permission</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-						<li class="breadcrumb-item active">Manage Menu</li>
+						<li class="breadcrumb-item active">Menu Permission</li>
 					</ul>
 				</div>
-				@if(!empty($selectedmenu))
-				<div class="col-auto float-end ms-auto">
-					<a href="{{route('menu')}}" class="btn add-btn"><i class="fa-solid fa-plus"></i> Add Menu</a>
-
-				</div>
-				@endif
+				
 			</div>
 		</div>
 		<!-- /Page Header -->
-		<!-- Search Filter -->
-		<div class="row filter-row">
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<div class="input-block mb-3 form-focus">
-					<input type="text" class="form-control floating">
-					<label class="focus-label">Menu Name</label>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<div class="input-block mb-3 form-focus select-focus">
-					<select class="select floating">
-						<option> -- Select -- </option>
-						<option> Pending </option>
-						<option> Approved </option>
-						<option> Returned </option>
-					</select>
-					<label class="focus-label">Status</label>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<div class="input-block mb-3 form-focus select-focus">
-					<select class="select floating">
-						<option> -- Select -- </option>
-						<option> High </option>
-						<option> Low </option>
-						<option> Medium </option>
-					</select>
-					<label class="focus-label">Priority</label>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<div class="input-block mb-3 form-focus">
-					<div class="cal-icon">
-						<input class="form-control floating datetimepicker" type="text">
-					</div>
-					<label class="focus-label">From</label>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<div class="input-block mb-3 form-focus">
-					<div class="cal-icon">
-						<input class="form-control floating datetimepicker" type="text">
-					</div>
-					<label class="focus-label">To</label>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-				<a href="#" class="btn btn-success w-100"> Search </a>
-			</div>
-		</div>
-		<!-- /Search Filter -->
-
-
-
+	
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
@@ -293,8 +235,8 @@
 		var type = $(checkbox).closest('td').data('type');
 
 		// Show the loader before making the AJAX request
-		showLoader();
-
+		// showLoader();
+		
 		// Make an AJAX request to the Laravel route
 		$.ajax({
 			url: '/rolePermission', // Update the route to your actual route
@@ -311,9 +253,11 @@
 			},
 			success: function(response) {
 				// Handle the response from the server
-				alert(response.result);
+				// alert(response.result);
+				
 				// Reload the page after success
-				location.reload();
+				// location.reload();
+				// $('.table').html('<i class="fa fa-spinner fa-spin"></i>');
 			},
 			error: function(error) {
 				console.error(error);
@@ -322,22 +266,25 @@
 			},
 			complete: function() {
 				// Hide loader when the request is complete
-				hideLoader();
+				// hideLoader();
+				location.reload();
+				$('.overlay').show();
+				$('.table').html("<center><div class='m-3 loader'></div></center>");
 			}
 		});
 	}
 
-	function showLoader() {
-		// Show the overlay and loader container
-		$('.overlay').show();
-		$('.loader-container').show();
-	}
+	// function showLoader() {
+	// 	// Show the overlay and loader container
+	// 	$('.overlay').show();
+	// 	$('.loader-container').show();
+	// }
 
-	function hideLoader() {
-		// Hide the overlay and loader container
-		$('.overlay').hide();
-		$('.loader-container').hide();
-	}
+	// function hideLoader() {
+	// 	// Hide the overlay and loader container
+	// 	$('.overlay').hide();
+	// 	$('.loader-container').hide();
+	// }
 </script>
 
 

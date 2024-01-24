@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-class AdminController extends Controller
+class EmployeeController extends Controller
 {
     public function Dashboard(){
-        return view('Admin.admin-dashboard');
+        return view('Employee.employee-dashboard');
     }
 
     public function logout(){

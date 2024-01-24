@@ -145,7 +145,7 @@
 					<div class="col-sm-12 col-md-3">
 						<label class="text-gray">Url</label>
 						<div class="input-block mb-3 form-focus">
-							<input type="url" class="form-control floating" name="url" placeholder="Url" @if(!empty($selectedmenu)) value="{{ $selectedmenu->url }}" @endif>
+							<input type="text" class="form-control floating" name="url" placeholder="Url" @if(!empty($selectedmenu)) value="{{ $selectedmenu->url }}" @endif>
 							<!-- <label class="focus-label">Url</label> -->
 						</div>
 					</div>
@@ -423,7 +423,7 @@
 				icon: "required",
 				url: {
 					required: true,
-					url: true // Make sure the value is a valid URL
+					// url: true // Make sure the value is a valid URL
 				}
 			},
 			messages: {
@@ -433,7 +433,7 @@
 				icon: "Please enter the Icon",
 				url: {
 					required: "Please enter the URL",
-					url: "Please enter a valid URL"
+					// url: "Please enter a valid URL"
 				}
 			},
 			errorElement: "span",

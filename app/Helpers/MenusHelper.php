@@ -26,13 +26,14 @@ class MenusHelper
 
         return $menus;
     }
-    public static function getMenuHierarchiesWithPermissions()
+    public static function getMenuHierarchiesWithPermissions($roleid)
     {
-        $menuswithpermission = Menu::leftJoin('role_permissions', function ($join) {
-            $join->on('menus.id', '=', 'role_permissions.menuid')
-                ->where('role_permissions.parentid', '=', 0)
-                ->where('role_permissions.subparentid', '=', 0);
-        })
+        $menuswithpermission = Menu::leftJoin('role_permissions', function ($join) use ($roleid) {
+                $join->on('menus.id', '=', 'role_permissions.menuid')
+                    ->where('role_permissions.parentid', '=', 0)
+                    ->where('role_permissions.subparentid', '=', 0)
+                    ->where('role_permissions.roleid', '=', $roleid);
+            })
             ->where('menus.parent_id', 0)
             ->where('menus.subparent_id', 0)
             ->select(
@@ -44,13 +45,14 @@ class MenusHelper
                 'role_permissions.delete'
             )
             ->get();
-
+    
         foreach ($menuswithpermission as $parentMenu) {
-            $parentMenu->mainmenus = Menu::leftJoin('role_permissions', function ($join) use ($parentMenu) {
-                $join->on('menus.id', '=', 'role_permissions.menuid')
-                    ->where('role_permissions.parentid', '=', $parentMenu->id)
-                    ->where('role_permissions.subparentid', '=', 0);
-            })
+            $parentMenu->mainmenus = Menu::leftJoin('role_permissions', function ($join) use ($parentMenu, $roleid) {
+                    $join->on('menus.id', '=', 'role_permissions.menuid')
+                        ->where('role_permissions.parentid', '=', $parentMenu->id)
+                        ->where('role_permissions.subparentid', '=', 0)
+                        ->where('role_permissions.roleid', '=', $roleid);
+                })
                 ->where('menus.parent_id', $parentMenu->id)
                 ->where('menus.subparent_id', 0)
                 ->select(
@@ -62,13 +64,14 @@ class MenusHelper
                     'role_permissions.delete'
                 )
                 ->get();
-
+    
             foreach ($parentMenu->mainmenus as $mainMenu) {
-                $mainMenu->submenus = Menu::leftJoin('role_permissions', function ($join) use ($mainMenu) {
-                    $join->on('menus.id', '=', 'role_permissions.menuid')
-                        ->where('role_permissions.parentid', '=', $mainMenu->parent_id)
-                        ->where('role_permissions.subparentid', '=', $mainMenu->id);
-                })
+                $mainMenu->submenus = Menu::leftJoin('role_permissions', function ($join) use ($mainMenu, $roleid) {
+                        $join->on('menus.id', '=', 'role_permissions.menuid')
+                            ->where('role_permissions.parentid', '=', $mainMenu->parent_id)
+                            ->where('role_permissions.subparentid', '=', $mainMenu->id)
+                            ->where('role_permissions.roleid', '=', $roleid);
+                    })
                     ->where('menus.parent_id', $mainMenu->parent_id)
                     ->where('menus.subparent_id', $mainMenu->id)
                     ->select(
@@ -82,7 +85,8 @@ class MenusHelper
                     ->get();
             }
         }
-
+    
         return $menuswithpermission;
     }
+    
 }

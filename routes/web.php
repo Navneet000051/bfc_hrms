@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\changeStatusController;
 use App\Http\Controllers\DeleteController;
+use App\Http\Controllers\EmployeeController;
 use App\Models\roles;
 
 /*
@@ -30,6 +31,7 @@ Route::middleware('admin.guest')->group(function () {
 Route::middleware('admin.auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('dashboard');
 
+    Route::get('/empdashboard',[EmployeeController::class,'Dashboard'])->name('EmployeeDashboard');
 
     Route::get('/registration', [AuthController::class, 'registration'])->name('registration');
 

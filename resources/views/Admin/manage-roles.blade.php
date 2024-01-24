@@ -86,9 +86,9 @@
 							<thead>
 								<tr>
 									<th>Sr. No.</th>
-									<th>Role Id</th>
+									<!-- <th>Role Id</th> -->
 									<th>Role Name</th>
-									<th>Datetime</th>
+									<!-- <th>Datetime</th> -->
 									<th>Status</th>
 									<th>Actions</th>
 								</tr>
@@ -215,18 +215,18 @@
 							data: 'DT_RowIndex',
 							name: 'DT_RowIndex'
 						},
-						{
-							data: 'id',
-							name: 'id'
-						},
+						// {
+						// 	data: 'id',
+						// 	name: 'id'
+						// },
 						{
 							data: 'name',
 							name: 'name'
 						},
-						{
-							data: 'created_at',
-							name: 'created_at'
-						},
+						// {
+						// 	data: 'created_at',
+						// 	name: 'created_at'
+						// },
 						{
 							data: 'status',
 							name: 'status'

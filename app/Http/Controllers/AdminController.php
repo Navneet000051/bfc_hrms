@@ -15,15 +15,26 @@ use Illuminate\Support\Facades\View;
 
 use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
+use App\Helpers\sideMenusHelper;
 use Illuminate\Support\Facades\Validator;
 // use MenusHelper;
 
 class AdminController extends Controller
 {
+    
+
     public function Dashboard()
     {
-        return view('Admin.admin-dashboard');
+        // Get the role ID of the authenticated user
+        $roleId = Auth::user()->role_id;
+    
+        // Get the side menu based on the user's role ID
+        $sidebar = sideMenusHelper::getSideMenu($roleId);
+    dd($sidebar);
+        // Pass the side menu data to the view
+        return view('Admin.admin-dashboard', ['sidebar' => $sidebar]);
     }
+    
 
     public function logout()
     {
@@ -121,7 +132,7 @@ class AdminController extends Controller
             $data = roles::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('status', function ($row) {
+                ->addColumn('status', function ($row) use ($tableName){
                     if ($row->status == 1) {
                         $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>';
                     } else {
@@ -129,12 +140,11 @@ class AdminController extends Controller
                     }
 
                     $statusBtn .= '<div class="dropdown-menu">
-                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
-                        <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
-                    </div>';
+                    <a class="dropdown-item" onclick="changeStatus(\'id\', \'' . $row->id . '\', \'status\', \'1\', \'' . $tableName . '\')"><i class="fa-regular fa-circle-dot text-success"></i> Active</a>
+                    <a class="dropdown-item" onclick="changeStatus(\'id\', \'' . $row->id . '\', \'status\', \'0\', \'' . $tableName . '\')"><i class="fa-regular fa-circle-dot text-danger"></i> Inactive</a>
+                </div>';
                     return $statusBtn;
                 })
-                
                 ->addColumn('action', function ($row) use ($tableName) {
                     $encryptedId = encrypt($row->id);
                     $actionBtn = '<li class="d-inline-flex">
@@ -143,12 +153,18 @@ class AdminController extends Controller
                             </a> &nbsp;&nbsp;
                         <a onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">
                             <i class="fe fe-trash-2 action-btn fs-6"></i>
-                        </a> &nbsp;&nbsp;
-                        <a href="' . route('menuPermission', ['roleid' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;
-                        
-                    </li> ';
+                        </a> &nbsp;&nbsp;';
+                
+                    // Handle the condition outside the string concatenation
+                    if ($row->status == 1) {
+                        $actionBtn .= '<a href="' . route('menuPermission', ['roleid' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;';
+                    }
+                
+                    $actionBtn .= '</li>';
+                
                     return $actionBtn;
                 })
+                
 
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -160,7 +176,7 @@ class AdminController extends Controller
         if (!empty($request->id)){
 
             $id = $request->id;
-            $validator = Validator::make($request->changeStatusall(), [
+            $validator = Validator::make($request->all(), [
                 'roles' => 'required|unique:roles,name,' . $id,
 
             ]);
@@ -210,13 +226,13 @@ class AdminController extends Controller
 
     public function menuPermission(Request $request, $roleid = 0)
     {
-
+        $data['role_id'] = decrypt($roleid);
         $data['tableName'] = (new Menu)->getTable();
         // $helperfunction1_res1 = MenusHelper::getMenuHierarchies();
         // $data['menus1'] = $helperfunction1_res1;
-        $helperfunction1_res = MenusHelper::getMenuHierarchiesWithPermissions();
+        $helperfunction1_res = MenusHelper::getMenuHierarchiesWithPermissions(decrypt($roleid));
         $data['menus'] = $helperfunction1_res;
-        $data['role_id'] = decrypt($roleid);
+        
         return view('Admin.menu-permission', $data);
     }
     public function handleMenuStatus(Request $request)

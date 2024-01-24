@@ -122,7 +122,7 @@
 <script>
 function changeStatus(where_id, where_id_value, where_column, where_column_value, where_table) {
     // Display spinner immediately
-    $('.table').html('<i class="fa fa-spinner fa-spin"></i>');
+    // $('.table').html('<i class="fa fa-spinner fa-spin"></i>');
 
     $.ajax({
         url: '/changeStatus', // Replace with your Laravel route
