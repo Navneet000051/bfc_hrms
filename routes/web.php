@@ -33,6 +33,8 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/empdashboard',[EmployeeController::class,'Dashboard'])->name('EmployeeDashboard');
 
+    Route::get('/clientdashboard',[EmployeeController::class,'Dashboard'])->name('ClientDashboard');
+
     Route::get('/registration', [AuthController::class, 'registration'])->name('registration');
 
     Route::post('/registration', [AuthController::class, 'regins'])->name('registration');

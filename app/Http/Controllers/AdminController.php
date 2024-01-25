@@ -22,20 +22,10 @@ use Illuminate\Support\Facades\Validator;
 class AdminController extends Controller
 {
     
-
     public function Dashboard()
     {
-        // Get the role ID of the authenticated user
-        $roleId = Auth::user()->role_id;
-    
-        // Get the side menu based on the user's role ID
-        $sidebar = sideMenusHelper::getSideMenu($roleId);
-    dd($sidebar);
-        // Pass the side menu data to the view
-        return view('Admin.admin-dashboard', ['sidebar' => $sidebar]);
+        return view('Admin.admin-dashboard');
     }
-    
-
     public function logout()
     {
         Auth::guard('admin')->logout();
