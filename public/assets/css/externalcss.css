@@ -31,3 +31,8 @@
 .action-btn{
     color:#fd8e2c;
 }
+
+.sidebar .sidebar-menu ul li.nosubmenu a span {
+    margin-left: 1px !important;
+}
+

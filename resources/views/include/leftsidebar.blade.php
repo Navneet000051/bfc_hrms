@@ -5,37 +5,43 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul class="sidebar-vertical">
                 <li class="menu-title">
-                    <span>Main{{ Auth::user()->role_id }}</span>
+                    <span>Main</span>
                 </li>
 
                 @foreach ($sidebar as $firstLevel)
-                    <li class="submenu">
-                        <a href="{{ $firstLevel['url'] }}">
+                    <li class="{{ (isset($firstLevel['submenu']) && count($firstLevel['submenu']) > 0) ? 'submenu' : '' }}">
+                        <a href="{{ route($firstLevel['url']) }}">
                             <i class="{{ $firstLevel['icon'] }}"></i>
                             <span>{{ $firstLevel['name'] }}</span>
-                            <span class="menu-arrow"></span>
+                            @if (isset($firstLevel['submenu']) && count($firstLevel['submenu']) > 0)
+                                <span class="menu-arrow"></span>
+                            @endif
                         </a>
 
                         @if (isset($firstLevel['submenu']))
                             <ul>
-                                @foreach ($firstLevel['submenu'] as $secondLevel)
-                                    <li class="submenu">
-                                        <a href="{{ $secondLevel['url'] }}">
+                                @forelse ($firstLevel['submenu'] as $secondLevel)
+                                    <li class="{{ (isset($secondLevel['submenu']) && count($secondLevel['submenu']) > 0) ? 'submenu' : 'nosubmenu' }}">
+                                        <a href="{{ route($secondLevel['url']) }}">
                                             <span>{{ $secondLevel['name'] }}</span>
-                                            <span class="menu-arrow"></span>
+                                            @if (isset($secondLevel['submenu']) && count($secondLevel['submenu']) > 0)
+                                                <span class="menu-arrow"></span>
+                                            @endif
                                         </a>
 
                                         @if (isset($secondLevel['submenu']))
                                             <ul>
                                                 @foreach ($secondLevel['submenu'] as $thirdLevel)
                                                     <li>
-                                                        <a href="{{ $thirdLevel['url'] }}">{{ $thirdLevel['name'] }}</a>
+                                                        <a href="{{ route($thirdLevel['url']) }}">{{ $thirdLevel['name'] }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>
                                         @endif
                                     </li>
-                                @endforeach
+                                @empty
+                                    {{-- Handle the case where $firstLevel['submenu'] is empty --}}
+                                @endforelse
                             </ul>
                         @endif
                     </li>

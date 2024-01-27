@@ -8,11 +8,13 @@ class SideMenusHelper
 {
     public static function getSideMenu($roleId)
     {
-        // Fetch all menu data
-        $allMenus = RolePermission::leftJoin('menus', function ($join) use ($roleId) {
+        // Fetch all menu data for parent menus
+        $parentMenus = RolePermission::leftJoin('menus', function ($join) use ($roleId) {
             $join->on('role_permissions.menuid', '=', 'menus.id')
                 ->where('role_permissions.roleid', '=', $roleId)
                 ->where('role_permissions.menu_status', '=', 1)
+                ->where('role_permissions.parentid', '=', 0)
+                ->where('role_permissions.subparentid', '=', 0)
                 ->where('menus.status', '=', 1);
         })
         ->whereNotNull('menus.id')
@@ -25,35 +27,50 @@ class SideMenusHelper
             'role_permissions.subparentid'
         )
         ->get();
-    
-        // Organize the menu data hierarchically
-        $formattedSideMenu = self::buildMenuHierarchy($allMenus, 0, 0);
-    
-        return $formattedSideMenu;
-    }
-    
-    protected static function buildMenuHierarchy($menus, $parentId, $subparentId)
-    {
-        $menuHierarchy = [];
 
-        foreach ($menus as $menu) {
-            if ($menu->parentid == $parentId && $menu->subparentid == $subparentId) {
-                $submenu = self::buildMenuHierarchy($menus, $menu->id, 0);
+        // Fetch submenu data for each parent menu
+        foreach ($parentMenus as $parentMenu) {
+            $parentMenu->submenu = RolePermission::leftJoin('menus', function ($join) use ($roleId, $parentMenu) {
+                $join->on('role_permissions.menuid', '=', 'menus.id')
+                    ->where('role_permissions.roleid', '=', $roleId)
+                    ->where('role_permissions.menu_status', '=', 1)
+                    ->where('role_permissions.parentid', '=', $parentMenu->id) // Use the parent menu ID
+                    ->where('role_permissions.subparentid', '=', 0)
+                    ->where('menus.status', '=', 1);
+            })
+            ->whereNotNull('menus.id')
+            ->select(
+                'menus.id',
+                'menus.name',
+                'menus.url',
+                'menus.icon',
+                'role_permissions.parentid',
+                'role_permissions.subparentid'
+            )
+            ->get();
 
-                if ($submenu) {
-                    $menu->submenu = $submenu;
-                }
-
-                $menuHierarchy[] = [
-                    'id' => $menu->id,
-                    'name' => $menu->name,
-                    'url' => $menu->url,
-                    'icon' => $menu->icon,
-                    'submenu' => $submenu,
-                ];
+            foreach ($parentMenu->submenu as $secondLevelMenu) {
+                $secondLevelMenu->submenu = RolePermission::leftJoin('menus', function ($join) use ($roleId, $secondLevelMenu) {
+                    $join->on('role_permissions.menuid', '=', 'menus.id')
+                        ->where('role_permissions.roleid', '=', $roleId)
+                        ->where('role_permissions.menu_status', '=', 1)
+                        ->where('role_permissions.parentid', '=', $secondLevelMenu->parentid) // Use the second-level menu ID
+                        ->where('role_permissions.subparentid', '=', $secondLevelMenu->id) // Use the second-level menu ID
+                        ->where('menus.status', '=', 1);
+                })
+                ->whereNotNull('menus.id')
+                ->select(
+                    'menus.id',
+                    'menus.name',
+                    'menus.url',
+                    'menus.icon',
+                    'role_permissions.parentid',
+                    'role_permissions.subparentid'
+                )
+                ->get();
             }
         }
 
-        return $menuHierarchy;
+        return $parentMenus;
     }
 }
