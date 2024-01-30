@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Models\Menu;
 
 use App\Models\RolePermission;
-
+use Illuminate\Support\Facades\Route;
 class MenusHelper
 {
     public static function getMenuHierarchies()
@@ -26,6 +26,19 @@ class MenusHelper
 
         return $menus;
     }
+    public static function getDefinedRoutes()
+    {
+        // Include the web.php file to access defined routes
+        // require_once __DIR__ . '/web.php';
+    
+        // Get all routes
+        $routes = collect(Route::getRoutes())->map(function ($route) {
+            return $route->getName();
+        });
+    
+        return $routes->filter(); // Remove null values
+    }
+    
     public static function getMenuHierarchiesWithPermissions($roleid)
     {
         $menuswithpermission = Menu::leftJoin('role_permissions', function ($join) use ($roleid) {

@@ -58,7 +58,7 @@
 		</div>
 		<!-- /Page Header -->
 		<!-- Inset Form --->
-		<form action="{{route('AddMenu')}}" method="post" enctype="multipart/form-data" id="AddForm">
+		<form action="{{route('Addmenu')}}" method="post" enctype="multipart/form-data" id="AddForm">
 			@csrf
 			<input type="hidden" name="id" @if(!empty($selectedmenu)) value="{{$selectedmenu->id}}" @endif>
 			<input type="hidden" name="pid" @if(!empty($selectedmenu)) value="{{$selectedmenu->parent_id}}" @endif>
@@ -261,7 +261,7 @@
 								<td class="text-end">
 									<li class="d-inline-flex">
 
-										<a href="{{ route('EditMenu', ['Id' => $menu->id, 'parentId' => $menu->parent_id, 'subparentId' => $menu->subparent_id]) }}">
+										<a href="{{ route('Editmenu', ['Id' => $menu->id, 'parentId' => $menu->parent_id, 'subparentId' => $menu->subparent_id]) }}">
 											<i class="fe fe-edit text-warning fs-5"></i>
 										</a> &nbsp;&nbsp;
 										<a onclick="deleteMenu('{{ $menu->id }}','0','0')">
@@ -305,7 +305,7 @@
 									<td class="text-end">
 										<!-- <ul class="icons-list"><li><i class="fe fe-edit"></i></li><li><i class="fe fe-trash-2"></i></li></ul> -->
 										<li class="d-inline-flex">
-											<a href="{{ route('EditMenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
+											<a href="{{ route('Editmenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
 												<i class="fe fe-edit text-warning fs-5"></i>
 											</a> &nbsp;&nbsp;
 											
@@ -343,7 +343,7 @@
 										</td>
 										<td class="text-end">
 											<li class="d-inline-flex">
-												<a href="{{ route('EditMenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
+												<a href="{{ route('Editmenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
 													<i class="fe fe-edit text-warning fs-5"></i>
 												</a> &nbsp;&nbsp;
 											

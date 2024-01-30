@@ -49,25 +49,25 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
+    Route::post('/roles',[AdminController::class,'AddRole'])->name('Addroles');
+
     Route::get('/roles/{id}', [AdminController::class,'roles'])->name('Updateroles');
+    
+    Route::get('/menu',[AdminController::class,'menu'])->name('menu');
+
+    Route::post('/delmenu',[AdminController::class,'menu'])->name('Deletemenu');
+
+    Route::post('/menu',[AdminController::class,'AddMenu'])->name('Addmenu');
+
+    Route::get('/menu/{Id}/{parentId}/{subparentId}', [AdminController::class, 'menu'])->name('Editmenu');   
 
     Route::get('/menuPermission/{roleid}', [AdminController::class,'menuPermission'])->name('menuPermission');
 
     Route::post('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
 
-    Route::delete('/deleteData',[DeleteController::class,'destroy'])->name('DeleteData');
-
-    Route::post('/roles',[AdminController::class,'AddRole'])->name('AddRole');
-    
-    Route::get('/menu',[AdminController::class,'menu'])->name('menu');
-    Route::post('/delmenu',[AdminController::class,'menu'])->name('Deletemenu');
-
-    Route::post('/menu',[AdminController::class,'AddMenu'])->name('AddMenu');
-
-    Route::get('/menu/{Id}/{parentId}/{subparentId}', [AdminController::class, 'menu'])->name('EditMenu');
-    
-
     Route::get('/getSubparentData/{parentId}',[AdminController::class,'getSubparentData'])->name('getSubparentData');
     Route::post('/changeStatus',[changeStatusController::class,'changeStatus'])->name('changeStatus');
+
+    Route::delete('/deleteData',[DeleteController::class,'destroy'])->name('DeleteData');
 
 }); 

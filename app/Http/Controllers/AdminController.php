@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Facades\Datatables;
 use App\Models\roles;
 use App\Models\Menu;
 use Illuminate\Support\Facades\View;
-
+use App\Models\rolePermission;
 use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
 use App\Helpers\sideMenusHelper;
@@ -24,6 +24,8 @@ class AdminController extends Controller
     
     public function Dashboard()
     {
+        $routeName = Route::currentRouteName();
+        var_dump($routeName);
         return view('Admin.admin-dashboard');
     }
     public function logout()
@@ -111,7 +113,7 @@ class AdminController extends Controller
     {
         $data['getMenu'] = Menu::latest()->get();
         if ($id) {
-
+// dd('ok');
             $data['action'] = 'EditRole';
             $data['roles'] = roles::find($id);
             return view('Admin.modal', $data);
@@ -241,7 +243,7 @@ class AdminController extends Controller
 
     public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
-
+     
         if (!empty($request->type) && $request->type == "delete") {
             // dd($request->all());
 
@@ -297,6 +299,9 @@ class AdminController extends Controller
     }
     public function AddMenu(Request $request)
     {
+       
+          $definedRoutes = MenusHelper::getDefinedRoutes();
+         
         //    dd($reques t->all());
         $menu = new Menu;
         if (($request->id != '') && ($request->pid != '') && ($request->sid != '')) {
@@ -378,11 +383,17 @@ class AdminController extends Controller
             if ($getdata) {
                 return redirect('menu')->with('error', 'Duplicate Entry not allowed');
             } else {
+                if ($definedRoutes->contains($menu->url)) {
+
                 if ($menu->save()) {
                     return redirect('menu')->with('success', 'Data save successfully');
                 } else {
                     return redirect('menu')->with('error', 'Data not saved');
                 }
+            }
+            else{
+                return redirect('menu')->with('error', 'Invalid url');
+            }
             }
         }
     }

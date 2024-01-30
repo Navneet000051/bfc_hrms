@@ -1,5 +1,5 @@
 @if($action =='EditRole')
-<form action="{{route('AddRole')}}" method="post">
+<form action="{{route('Addroles')}}" method="post">
     @csrf
    
     <div class="input-block mb-3">

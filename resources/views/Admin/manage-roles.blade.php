@@ -116,7 +116,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form action="{{ route('AddRole') }}" method="post">
+						<form action="{{ route('Addroles') }}" method="post">
 							@csrf
 							<div class="input-block mb-3">
 								<label class="col-form-label">Department Name <span class="text-danger">*</span></label>
