@@ -43,7 +43,9 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/adminprofile', [AdminController::class, 'adminprofile'])->name('adminprofile');
 
-    Route::get('/createemp',[AdminController::class,'createemp'])->name('employee');
+    Route::get('/createemp',[EmployeeController::class,'Showemp'])->name('employee');
+
+    Route::post('/createemp',[EmployeeController::class,'Addemp'])->name('employee');
 
     Route::get('/createclient',[AdminController::class,'createclient'])->name('client');
 

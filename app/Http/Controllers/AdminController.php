@@ -39,23 +39,7 @@ class AdminController extends Controller
     {
         return view('Admin.adminprofile');
     }
-    public function createemp(Request $request)
-    {
-        // dd(DB::table('users')->select('*')->get());
-        if ($request->ajax()) {
-            $data = DB::table('users')->select('*')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action',])
-                ->make(true);
-        }
-
-        return view('Admin.createemp');
-    }
+  
     public function createclient(Request $request)
     {
         if ($request->ajax()) {
@@ -113,7 +97,7 @@ class AdminController extends Controller
     {
         $data['getMenu'] = Menu::latest()->get();
         if ($id) {
-// dd('ok');
+
             $data['action'] = 'EditRole';
             $data['roles'] = roles::find($id);
             return view('Admin.modal', $data);

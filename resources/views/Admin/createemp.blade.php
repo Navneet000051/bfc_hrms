@@ -11,80 +11,116 @@
 		<div class="page-header">
 			<div class="row align-items-center">
 				<div class="col">
-					<h3 class="page-title">Department</h3>
+					<h3 class="page-title">Employee</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-						<li class="breadcrumb-item active">Department</li>
+						<li class="breadcrumb-item active">Employee</li>
 					</ul>
 				</div>
 				<div class="col-auto float-end ms-auto">
-					<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Department</a>
+					<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa-solid fa-plus"></i> Add Employee</a>
 				</div>
 			</div>
 		</div>
 		<!-- /Page Header -->
 		<!-- Inset Form --->
+		<form action="{{route('employee')}}" method="post" enctype="multipart/form-data">
+			@csrf
 		<div class="container" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
 			<div class="row pt-3">
 				<h4 class="text-center pb-2 heading"><i class="fa-solid fa-plus"></i>Add Employee</h4>
 
 				<div class="col-sm-12 col-md-3">
-					<div class="input-block mb-3 form-focus">
-						<input type="text" class="form-control floating">
-						<label class="focus-label">Employee Name</label>
+					<div class="input-block mb-3 form-focus {{$errors->has('name') ? 'has-error' : ''}}">
+						<input type="text" name="name" id="employee_name" class="form-control floating">
+						
+						<label for="employee_name" class="focus-label">Employee Name</label>
 					</div>
+					@error('name')
+						<span class="text-danger">{{$message}}</span>
+						@enderror
 				</div>
+				
 				<div class="col-sm-12 col-md-3">
 					<div class="input-block mb-3 form-focus">
-						<input type="email" class="form-control floating">
+						<input type="email" name="email" class="form-control floating">
+						
 						<label class="focus-label">Email ID</label>
 					</div>
+					@error('email')
+						<span class="text-danger">{{$message}}</span>
+						@enderror
 				</div>
 				<div class="col-sm-12 col-md-3">
 					<div class="input-block mb-3 form-focus">
-						<input type="text" class="form-control floating">
+						<input type="number" name="mobile" class="form-control floating">
 						<label class="focus-label">mobile Number</label></label>
+						
 					</div>
+					@error('mobile')
+						<span class="text-danger py-2">{{$message}}</span>
+						@enderror
 				</div>
 
 				<div class="col-sm-12 col-md-3">
 					<div class="input-block mb-3 form-focus">
-						<select class="select floating">
+						<select class="select floating" name="role">
+							
+							<option>Select Company</option>
+							<div class="input-block mb-3 form-focus">
+						<select class="select floating" name="role">
+							@foreach($roles as $role)
 							<option>Select Company</option>
 							<option>Global Technologies</option>
 							<option>Delta Infotech</option>
+							$endforeach
 						</select>
 						<label class="focus-label">Company</label>
 					</div>
+						</select>
+						<label class="focus-label">Company</label>
+					</div>
+					@error('role')
+						<span class="text-danger py-2">{{$message}}</span>
+						@enderror
 				</div>
 				<div class="col-12">
 					<div class="row">
 						<div class="col-sm-12 col-lg-7">
 							<div class="row">
-								<div class="col-sm-12 col-md-12 col-lg-4">
+								<div class="col-sm-12 col-md-12 col-lg-5">
 									<div class="input-block mb-3 form-focus">
-										<input type="text" class="form-control floating">
+										<input type="text" name="password" class="form-control floating">
 										<label class="focus-label">Password</label>
 									</div>
+									@error('password')
+										<span class="text-danger py-2">{{$message}}</span>
+										@enderror
 								</div>
-								<div class="col-sm-12 col-md-12 col-lg-8">
+								<div class="col-sm-12 col-md-12 col-lg-7">
 									<div class="mb-3">
-										<textarea class="form-control" style="height:110px !important;" placeholder="Address"></textarea>
-
+										<textarea class="form-control" name="address" style="height:100px !important;" placeholder="Address"></textarea>
 									</div>
+									
+									@error('address')
+										<span class="text-danger py-2">{{$message}}</span>
+										@enderror
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-12 col-lg-5">
+						<div class="col-sm-12 col-lg-5" style="padding-bottom:15px;">
 							<div class="row">
-								<div class="col-sm-12 col-md-8 col-lg-8">
+								<div class="col-sm-12 col-md-8 col-lg-8" style="padding-bottom:50px;">
 									<div class="input-block mb-3 form-focus">
-										<input name="file1" type="file" class="dropify" data-height="100" />
+										<input name="image" type="file" class="dropify" data-height="85" />
 									</div>
+									@error('image')
+									<span class="text-danger py-2">{{$message}}</span>
+									@enderror
 								</div>
-								<div class="col-sm-12 col-md-8 col-lg-4">
+								<div class="col-sm-12 col-md-4 col-lg-4">
 									<div class="input-block mb-3 form-focus">
-										<a class="btn btn-primary" href="#">Apply Leave</a>
+										<button class="btn btn-primary" type="submit">Submit</button>
 									</div>
 								</div>
 							</div>
@@ -99,12 +135,13 @@
 			</div>
 
 		</div>
+        </form>
 		<!-- Inserts Employee Form --->
 		<!-- show Employee Data --->
 		<div class="row pt-2">
 			<div class="col-md-12">
 				<div>
-					<table id="yajradb" class="table table-striped ">
+					<!-- <table id="yajradb" class="table table-striped ">
 						<thead>
 							<tr>
 								<th>#</th>
@@ -117,7 +154,7 @@
 						<tbody>
 
 						</tbody>
-					</table>
+					</table> -->
 				</div>
 			</div>
 		</div>
