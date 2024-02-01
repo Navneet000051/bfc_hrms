@@ -21,11 +21,14 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
-    
+    public function errorPage()
+    {
+        return view('admin.error');
+    } 
     public function Dashboard()
     {
         $routeName = Route::currentRouteName();
-        var_dump($routeName);
+        // var_dump($routeName);
         return view('Admin.admin-dashboard');
     }
     public function logout()

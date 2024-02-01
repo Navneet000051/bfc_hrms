@@ -65,21 +65,16 @@
 				<div class="col-sm-12 col-md-3">
 					<div class="input-block mb-3 form-focus">
 						<select class="select floating" name="role">
-							
-							<option>Select Company</option>
-							<div class="input-block mb-3 form-focus">
-						<select class="select floating" name="role">
-							@foreach($roles as $role)
-							<option>Select Company</option>
-							<option>Global Technologies</option>
-							<option>Delta Infotech</option>
-							$endforeach
+						<option value="" selected disabled>--Choose Role--</option>
+							@forelse($roles as $role)
+								<option value="{{$role->id}}">{{ $role->name }}</option>
+							@empty
+								<option value="">No roles available</option>
+							@endforelse
 						</select>
 						<label class="focus-label">Company</label>
 					</div>
-						</select>
-						<label class="focus-label">Company</label>
-					</div>
+						
 					@error('role')
 						<span class="text-danger py-2">{{$message}}</span>
 						@enderror

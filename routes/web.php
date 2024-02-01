@@ -26,9 +26,14 @@ Route::middleware('admin.guest')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('login');
 
     Route::post('/', [AuthController::class, 'login'])->name('login');
+
+    
+
 });
 
 Route::middleware('admin.auth')->group(function () {
+    Route::get('/error', [AdminController::class, 'errorPage'])->name('error');
+
     Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('dashboard');
 
     Route::get('/empdashboard',[EmployeeController::class,'Dashboard'])->name('EmployeeDashboard');

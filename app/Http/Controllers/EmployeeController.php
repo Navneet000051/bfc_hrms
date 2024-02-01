@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+use App\Models\User; 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -42,30 +44,51 @@ class EmployeeController extends Controller
                 ->rawColumns(['action',])
                 ->make(true);
         }
-       $data['roles'] = roles::where('status','=',1)->latest();
+        $data['roles'] = roles::where('status', '=', 1)->latest()->get();
+
         return view('Admin.createemp',$data);
     }
+ 
     public function Addemp(Request $request)
     {
-        $validator = Validator::make($request->all(), 
-        [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users',
-            'mobile' => 'required|numeric|digits:10', // Assuming 10-digit numeric mobile number
-            'password' => 'required|min:6',
+            'mobile' => 'required|numeric|digits:10',
+            'password' => 'required|min:5',
             'role' => 'required',
             'address' => 'required',
-            'icon' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+            'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        if($validator->fails()){
+    
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-
+        } else {
+            // Validation passed, insert data into the users table
+   
+            $user = new UserModel();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->mobile = $request->input('mobile');
+            $user->password = bcrypt($request->input('password')); // Hash the password
+            $user->role_id = $request->input('role');
+            $user->address = $request->input('address');
+    
+            // Generate a unique filename for the uploaded file
+            $filename = Str::uuid() . '.' . $request->file('image')->getClientOriginalExtension();
+    
+            // Store the file in the 'icons' directory under the 'public' disk
+            $iconPath = $request->file('image')->storeAs('icons', $filename, 'public');
+            $user->icon = $filename;
+    
+            // Save the user
+            if($user->save()){
+            // Redirect with success message
+            return redirect()->route('employee')->with('success', 'User added successfully');
+            }else{
+                
+            return redirect()->route('employee')->with('error', 'User not added');
+            }
         }
-        else{
-            echo 2;
-        }
-        
-
     }
 }

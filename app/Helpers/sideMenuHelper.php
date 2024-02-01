@@ -24,14 +24,22 @@ class SideMenusHelper
                     ->where('menus.status', '=', 1);
             })
             ->whereNotNull('menus.id')
-            ->select('menus.url')
+            ->select(
+                'menus.url',
+                'role_permissions.add',
+                'role_permissions.edit',
+                'role_permissions.delete',
+                'role_permissions.view',
+            )
             ->get();
     
         $authorized = false;
-        $actions = ['Add', 'Edit', 'Update', 'Delete'];
-        if($routeName == 'menuPermission' && $roleId == 1){
+        
+        $actions = ['Add', 'Edit', 'Delete'];
+        if(($routeName == 'dashboard') || ($routeName == 'menuPermission' && $roleId == 1)){
             $authorized = true; 
         }
+
         else{
             foreach ($menus as $menu) {
                 if ($menu->url == $routeName) {
@@ -117,7 +125,8 @@ class SideMenusHelper
     
             return $parentMenus;
         } else {
-            dd("Unauthorized user");
+            // dd("Unauthorized user");
+            abort(redirect('/dashboard')->with('error', 'Unauthorized access.'));
         }
 }
 

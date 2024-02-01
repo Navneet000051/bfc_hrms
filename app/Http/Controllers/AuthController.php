@@ -45,7 +45,7 @@ class AuthController extends Controller
             return redirect('/')->with('error', 'Please enter correct email');
         }
     }
-
+   
     public function registration()
     {
         return view('Admin.registration');
