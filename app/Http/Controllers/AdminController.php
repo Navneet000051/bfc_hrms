@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class AdminController extends Controller
     public function errorPage()
     {
         return view('admin.error');
-    } 
+    }
     public function Dashboard()
     {
         $routeName = Route::currentRouteName();
@@ -42,7 +43,7 @@ class AdminController extends Controller
     {
         return view('Admin.adminprofile');
     }
-  
+
     public function createclient(Request $request)
     {
         if ($request->ajax()) {
@@ -111,7 +112,7 @@ class AdminController extends Controller
             $data = roles::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('status', function ($row) use ($tableName){
+                ->addColumn('status', function ($row) use ($tableName) {
                     if ($row->status == 1) {
                         $statusBtn = '<a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-circle-dot text-success"></i> Active </a>';
                     } else {
@@ -127,23 +128,23 @@ class AdminController extends Controller
                 ->addColumn('action', function ($row) use ($tableName) {
                     $encryptedId = encrypt($row->id);
                     $actionBtn = '<li class="d-inline-flex">
-                            <a onclick="showEdit(' . $row->id . ')">
+                            <a class="EditPermission" onclick="showEdit(' . $row->id . ')">
                                 <i class="fe fe-edit action-btn fs-6"></i>
                             </a> &nbsp;&nbsp;
-                        <a onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">
+                        <a class="DeletePermission" onclick="deleteData(\'id\',' . $row->id . ', \'' . $tableName . '\')">
                             <i class="fe fe-trash-2 action-btn fs-6"></i>
                         </a> &nbsp;&nbsp;';
-                
+
                     // Handle the condition outside the string concatenation
                     if ($row->status == 1) {
                         $actionBtn .= '<a href="' . route('menuPermission', ['roleid' => $encryptedId]) . '"><i class="fe fe-eye action-btn"></i> </a> &nbsp;&nbsp;';
                     }
-                
+
                     $actionBtn .= '</li>';
-                
+
                     return $actionBtn;
                 })
-                
+
 
                 ->rawColumns(['status', 'action'])
                 ->make(true);
@@ -152,7 +153,7 @@ class AdminController extends Controller
     }
     public function AddRole(Request $request)
     {
-        if (!empty($request->id)){
+        if (!empty($request->id)) {
 
             $id = $request->id;
             $validator = Validator::make($request->all(), [
@@ -211,7 +212,7 @@ class AdminController extends Controller
         // $data['menus1'] = $helperfunction1_res1;
         $helperfunction1_res = MenusHelper::getMenuHierarchiesWithPermissions(decrypt($roleid));
         $data['menus'] = $helperfunction1_res;
-        
+
         return view('Admin.menu-permission', $data);
     }
     public function handleMenuStatus(Request $request)
@@ -230,30 +231,47 @@ class AdminController extends Controller
 
     public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')
     {
-     
+
         if (!empty($request->type) && $request->type == "delete") {
             // dd($request->all());
 
             if ($request->parentId == 0 && $request->subparentId == 0 && $request->Id > 0) {
-                if (Menu::where('parent_id', $request->Id)->delete()) {
+                if (Menu::where('parent_id', $request->Id)->exists()) {
+                    if (Menu::where('parent_id', $request->Id)->delete()) {
+                        if (Menu::where('id', $request->Id)->delete()) {
+                            return redirect('menu')->with('success', 'Data deleted successfully');
+                        } else {
+                            return redirect('menu')->with('error', 'Data not deleted');
+                        }
+                    } else {
+                        return redirect('menu')->with('error', 'Data not deleted');
+                    }
+                } else {
                     if (Menu::where('id', $request->Id)->delete()) {
                         return redirect('menu')->with('success', 'Data deleted successfully');
                     } else {
                         return redirect('menu')->with('error', 'Data not deleted');
                     }
-                } else {
-                    return redirect('menu')->with('error', 'Data not deleted');
                 }
             }
             if ($request->parentId > 0 && $request->subparentId == 0 && $request->Id > 0) {
-                if (Menu::where('subparent_id', $request->Id)->delete()) {
+
+                if (Menu::where('subparent_id', $request->Id)->exists()) {
+                    if (Menu::where('subparent_id', $request->Id)->delete()) {
+                        if (Menu::where('id', $request->Id)->delete()) {
+                            return redirect('menu')->with('success', 'Data deleted successfully');
+                        } else {
+                            return redirect('menu')->with('error', 'Data not deleted');
+                        }
+                    } else {
+                        return redirect('menu')->with('error', 'Submenu not deleted');
+                    }
+                } else {
                     if (Menu::where('id', $request->Id)->delete()) {
                         return redirect('menu')->with('success', 'Data deleted successfully');
                     } else {
                         return redirect('menu')->with('error', 'Data not deleted');
                     }
-                } else {
-                    return redirect('menu')->with('error', 'Submenu not deleted');
                 }
             }
             if ($request->parentId > 0 && $request->subparentId > 0 && $request->Id > 0) {
@@ -286,9 +304,9 @@ class AdminController extends Controller
     }
     public function AddMenu(Request $request)
     {
-       
-          $definedRoutes = MenusHelper::getDefinedRoutes();
-         
+
+        $definedRoutes = MenusHelper::getDefinedRoutes();
+
         //    dd($reques t->all());
         $menu = new Menu;
         if (($request->id != '') && ($request->pid != '') && ($request->sid != '')) {
@@ -372,15 +390,14 @@ class AdminController extends Controller
             } else {
                 if ($definedRoutes->contains($menu->url)) {
 
-                if ($menu->save()) {
-                    return redirect('menu')->with('success', 'Data save successfully');
+                    if ($menu->save()) {
+                        return redirect('menu')->with('success', 'Data save successfully');
+                    } else {
+                        return redirect('menu')->with('error', 'Data not saved');
+                    }
                 } else {
-                    return redirect('menu')->with('error', 'Data not saved');
+                    return redirect('menu')->with('error', 'Invalid url');
                 }
-            }
-            else{
-                return redirect('menu')->with('error', 'Invalid url');
-            }
             }
         }
     }

@@ -136,7 +136,7 @@
 		<div class="row pt-2">
 			<div class="col-md-12">
 				<div>
-					<!-- <table id="yajradb" class="table table-striped ">
+					<table id="yajradb" class="table table-striped ">
 						<thead>
 							<tr>
 								<th>#</th>
@@ -146,10 +146,10 @@
 								<th width="105px">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody class="ViewPermission">
 
 						</tbody>
-					</table> -->
+					</table>
 				</div>
 			</div>
 		</div>

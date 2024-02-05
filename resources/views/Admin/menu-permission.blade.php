@@ -87,7 +87,7 @@
 									<th class="text-center">Delete</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody >
 								<?php $sr = 1; ?>
 								@foreach($menus as $menu)
 								<!-- Display parent menu data -->

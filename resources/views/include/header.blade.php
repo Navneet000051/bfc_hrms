@@ -301,3 +301,28 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<?php
+
+use App\Helpers\SideMenusHelper;
+$buttonPermission = SideMenusHelper::getButtonPermission();
+if(!empty($buttonPermission)){
+
+?>
+<style>
+    .AddPermission {
+        display: <?php echo ($buttonPermission->add == 1) ? 'block' : 'none'; ?>;
+    }
+
+    .DeletePermission {
+        display: <?php echo ($buttonPermission->delete == 1) ? 'block' : 'none'; ?>;
+    }
+
+    .EditPermission {
+        display: <?php echo ($buttonPermission->edit == 1) ? 'block' : 'none'; ?>;
+    }
+
+    .showdatapermission {
+        display: <?php echo ($buttonPermission->view == 1) ? 'block' : 'none'; ?>;
+    }
+</style>
+<?php } ?>

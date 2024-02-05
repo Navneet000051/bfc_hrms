@@ -214,7 +214,7 @@
 
 
 
-		<div class="row">
+		<div class="row showdatapermission">
 			<div class="col-md-12">
 				<div class="table-responsive">
 					<table class="table table-striped custom-table datatable">
@@ -261,11 +261,11 @@
 								<td class="text-end">
 									<li class="d-inline-flex">
 
-										<a href="{{ route('Editmenu', ['Id' => $menu->id, 'parentId' => $menu->parent_id, 'subparentId' => $menu->subparent_id]) }}">
-											<i class="fe fe-edit text-warning fs-5"></i>
+										<a class="EditPermission"href="{{ route('Editmenu', ['Id' => $menu->id, 'parentId' => $menu->parent_id, 'subparentId' => $menu->subparent_id]) }}">
+											<i class="fe fe-edit text-warning fs-6"></i>
 										</a> &nbsp;&nbsp;
-										<a onclick="deleteMenu('{{ $menu->id }}','0','0')">
-											<i class="fe fe-trash-2 text-danger fs-5"></i>
+										<a class="DeletePermission" onclick="deleteMenu('{{ $menu->id }}','0','0')">
+											<i class="fe fe-trash-2 text-danger fs-6"></i>
 										</a>
 									</li>
 								</td>
@@ -305,11 +305,11 @@
 									<td class="text-end">
 										<!-- <ul class="icons-list"><li><i class="fe fe-edit"></i></li><li><i class="fe fe-trash-2"></i></li></ul> -->
 										<li class="d-inline-flex">
-											<a href="{{ route('Editmenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
-												<i class="fe fe-edit text-warning fs-5"></i>
+											<a class="EditPermission" href="{{ route('Editmenu', ['Id' => $mainMenu->id, 'parentId' => $mainMenu->parent_id, 'subparentId' => $mainMenu->subparent_id]) }}">
+												<i class="fe fe-edit text-warning fs-6"></i>
 											</a> &nbsp;&nbsp;
 											
-											<a onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
+											<a class="DeletePermission" onclick="deleteMenu('{{$mainMenu->id }}','{{$mainMenu->parent_id }}','{{$mainMenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-6"></i></a>
 										</li>
 
 									</td>
@@ -343,11 +343,11 @@
 										</td>
 										<td class="text-end">
 											<li class="d-inline-flex">
-												<a href="{{ route('Editmenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
-													<i class="fe fe-edit text-warning fs-5"></i>
+												<a class="EditPermission" href="{{ route('Editmenu', ['Id' => $submenu->id, 'parentId' => $submenu->parent_id, 'subparentId' => $submenu->subparent_id]) }}">
+													<i class="fe fe-edit text-warning fs-6"></i>
 												</a> &nbsp;&nbsp;
 											
-												<a onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-5"></i></a>
+												<a class="DeletePermission" onclick="deleteMenu('{{$submenu->id }}','{{$submenu->parent_id }}','{{$submenu->subparent_id }}')"><i class="fe fe-trash-2 text-danger fs-6"></i></a>
 												<!-- href="#" data-bs-toggle="modal" data-bs-target="#delete_client" -->
 											</li>
 										</td>

@@ -78,7 +78,7 @@
 										<th class="text-end">Action</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody class="ViewPermission">
 									<!-- <tr>
 										<td>
 											<h2 class="table-avatar">
