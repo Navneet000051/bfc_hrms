@@ -73,7 +73,7 @@
 			<div class="col-md-12">
 				<div class="table-responsive">
 					<form action="" method="post">
-						<table class="table table-striped custom-table datatable">
+						<table class="table table-striped custom-table BSdatatable">
 							<thead>
 								<tr>
 									<th>ID</th>
@@ -230,9 +230,14 @@
 	@endsection
 	@section('externaljs')
 	<script>
+		 $('.BSdatatable').DataTable({
+			"pageLength": 50
+		 });
+		 
 	function menuStatus(checkbox, id, parentId, subparentId, roleId, menustatus = 0) {
 		var value = checkbox.checked ? 1 : 0;
 		var type = $(checkbox).closest('td').data('type');
+		// $('.BSdatatable tbody').hide();
 
 		// Show the loader before making the AJAX request
 		// showLoader();
@@ -241,6 +246,7 @@
 		$.ajax({
 			url: '/rolePermission', // Update the route to your actual route
 			type: 'POST',
+			async: 'false',
 			data: {
 				"_token": "{{ csrf_token() }}",
 				value: value,
@@ -252,24 +258,20 @@
 				menustatus: menustatus
 			},
 			success: function(response) {
-				// Handle the response from the server
-				// alert(response.result);
+				console.log(response.table_html);
+				// $('.BSdatatable tbody').html(response.table_html).show();
+				$('.BSdatatable tbody').html(response.table_html);
 				
-				// Reload the page after success
-				// location.reload();
-				// $('.table').html('<i class="fa fa-spinner fa-spin"></i>');
 			},
 			error: function(error) {
-				console.error(error);
-				// Reload the page after error
-				location.reload();
+				
 			},
 			complete: function() {
 				// Hide loader when the request is complete
 				// hideLoader();
-				location.reload();
-				$('.overlay').show();
-				$('.table').html("<center><div class='m-3 loader'></div></center>");
+				// location.reload();
+				// $('.overlay').show();
+				// $('.table').html("<center><div class='m-3 loader'></div></center>");
 			}
 		});
 	}

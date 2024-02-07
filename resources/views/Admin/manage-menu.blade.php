@@ -161,7 +161,7 @@
 		</form>
 		<!-- Inserts Employee Form --->
 		<!-- Search Filter -->
-		<div class="row filter-row">
+		<div class="row filter-row showdatapermission">
 			<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 				<div class="input-block mb-3 form-focus">
 					<input type="text" class="form-control floating">

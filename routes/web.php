@@ -47,6 +47,14 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('logout', [AdminController::class, 'logout'])->name('logout');
 
     Route::get('/adminprofile', [AdminController::class, 'adminprofile'])->name('adminprofile');
+    
+    Route::patch('/adminprofile', [AdminController::class,'adminprofile'])->name('updateProfile');
+
+    Route::post('/adminprofile', [AdminController::class,'adminprofile'])->name('updateProfileImg');
+    
+    Route::get('/changePassword', [AdminController::class,'changePasswordShow'])->name('changePassword');
+
+    Route::put('/changePassword', [AdminController::class,'changePassword'])->name('changePassword');
 
     Route::get('/createemp',[EmployeeController::class,'Showemp'])->name('employee');
 

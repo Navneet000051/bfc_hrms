@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\Datatables;
@@ -18,6 +19,7 @@ use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
 use App\Helpers\sideMenusHelper;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 // use MenusHelper;
 
 class AdminController extends Controller
@@ -39,11 +41,94 @@ class AdminController extends Controller
         return redirect()->route('login');
     }
 
-    public function adminprofile()
+    public function adminprofile(Request $request)
     {
+        if (!empty($request->id)) {
+            $request->validate([
+                'mobile' => 'required|numeric|digits_between:1,10',
+                'email' => 'required|email',
+                'address' => 'required|string',
+            ]);
+            $user = auth()->user();
+
+            // Update user details
+            $user->mobile = $request->input('mobile');
+            $user->email = $request->input('email');
+            $user->address = $request->input('address');
+            $user->save();
+
+            // Redirect back or wherever you want
+            return redirect()->back()->with('success', 'Profile updated successfully');
+        } elseif (!empty($request->icon)) {
+            $request->validate([
+                'icon' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            ]);
+
+            $user = auth()->user();
+
+            if ($request->hasFile('icon')) {
+                // Delete the old image if it exists
+                if ($user->icon) {
+                    // Storage::delete($user->icon);
+                    Storage::disk('public')->delete($user->icon);
+                }
+                $imagePath = $request->file('icon')->store('admin', 'public');
+                // Remove the "admin/" prefix before saving in the database
+                // $imagePath = str_replace('admin/', '', $imagePath);
+                // dd($imagePath);
+                $user->icon = $imagePath;
+
+                if ($user->save()) {
+                    Session::flash('success', 'Image updated successfully');
+                } else {
+                    Session::flash('error', 'Image not updated ');
+                }
+            } else {
+                // Debugging: Check if the 'icon' file is present in the request
+
+                Session::flash('success', 'No file provided in the request.');
+            }
+        }
+
         return view('Admin.adminprofile');
     }
+    public function changePasswordShow()
+    {
+        return view('Admin.change-password');
+    }
+    public function changePassword(Request $request)
+    {
+        // Validate the request data, including the 'confirmed' rule for 'new-password'
+        $validatedData = $request->validate([
+            'current-password' => 'required',
+            'new-password' => 'required',
+            'password_confirmation' => 'required|same:new-password',
+        ]);
+        // Check if the current password matches the authenticated user's password
+        if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
+            // The current password does not match
+            return redirect()->back()->with("error", "Your current password does not match with the password.");
+        }
+        // Check if the new password is the same as the current password
+        if (strcmp($request->get('current-password'), $request->get('new-password')) == 0) {
+            // Current password and new password are the same
+            return redirect()->back()->with("error", "New Password cannot be the same as your current password.");
+        }
 
+
+        // Change Password
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('new-password'));
+
+        // Save the user and check if the save operation was successful
+        if ($user->save()) {
+            return redirect()->back()->with("success", "Password successfully changed!");
+        } else {
+            // Handle the case where the save operation fails
+            return redirect()->back()->with("error", "Failed to change the password. Please try again.");
+        }
+    }
+    //get emabedurl
     public function createclient(Request $request)
     {
         if ($request->ajax()) {
@@ -224,9 +309,143 @@ class AdminController extends Controller
         $roleId = $request->roleId;
         $type = $request->type;
         $menustatus = $request->menustatus;
-
         $result = RolePermissionHelper::menuStatus($value, $id, $parentId, $subparentId, $roleId, $type, $menustatus);
-        return response()->json(['result' => $result['status']]);
+
+        $updatedMenus = MenusHelper::getMenuHierarchiesWithPermissions($roleId);
+
+        // Initialize the table body HTML
+        $tbodyHtml = '';
+        $sr = 1;
+
+        // Loop through the updated menus to generate table rows
+        foreach ($updatedMenus as $menu) {
+            // Display parent menu data
+            $tbodyHtml .= '<tr>';
+            $tbodyHtml .= '<td>' . $sr++ . '</td>';
+            $tbodyHtml .= '<td>' . $menu->name . '</td>';
+            $tbodyHtml .= '<td></td>';
+            $tbodyHtml .= '<td></td>';
+            $tbodyHtml .= '<td class="text-center" data-type="menu_status">
+                    <label class="custom_check">
+                        <input name="menustatus" type="checkbox" ' . ($menu->menu_status == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $menu->id . '\',\'' . $menu->parent_id . '\',\'' . $menu->subparent_id . '\',\'' . $roleId . '\',\'type\')">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>';
+            $tbodyHtml .= '<td class="text-center" data-type="add">
+                    <label class="custom_check">
+                        <input name="addstatus" type="checkbox" ' . ($menu->add == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $menu->id . '\',\'' . $menu->parent_id . '\',\'' . $menu->subparent_id . '\',\'' . $roleId . '\',1)">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>';
+            $tbodyHtml .= '<td class="text-center" data-type="edit">
+                    <label class="custom_check">
+                        <input name="editstatus" type="checkbox" ' . ($menu->edit == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $menu->id . '\',\'' . $menu->parent_id . '\',\'' . $menu->subparent_id . '\',\'' . $roleId . '\',1)">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>';
+            $tbodyHtml .= '<td class="text-center" data-type="view">
+                    <label class="custom_check">
+                        <input name="viewstatus" type="checkbox" ' . ($menu->view == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $menu->id . '\',\'' . $menu->parent_id . '\',\'' . $menu->subparent_id . '\',\'' . $roleId . '\',1)">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>';
+            $tbodyHtml .= '<td class="text-center" data-type="delete">
+                    <label class="custom_check">
+                        <input name="deletestatus" type="checkbox" ' . ($menu->delete == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $menu->id . '\',\'' . $menu->parent_id . '\',\'' . $menu->subparent_id . '\',\'' . $roleId . '\',1)">
+                        <span class="checkmark"></span>
+                    </label>
+                </td>';
+            $tbodyHtml .= '</tr>';
+
+            // Display main menu data
+            if ($menu->status == 1) {
+                foreach ($menu->mainmenus as $mainMenu) {
+                    $tbodyHtml .= '<tr>';
+                    $tbodyHtml .= '<td>' . $sr++ . '</td>';
+                    $tbodyHtml .= '<td>' . $menu->name . '</td>';
+                    $tbodyHtml .= '<td>' . $mainMenu->name . '</td>';
+                    $tbodyHtml .= '<td></td>';
+                    $tbodyHtml .= '<td class="text-center" data-type="menu_status">
+            <label class="custom_check">
+                <input name="menustatus" type="checkbox" ' . ($mainMenu->menu_status == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $mainMenu->id . '\',\'' . $mainMenu->parent_id . '\',\'' . $mainMenu->subparent_id . '\',\'' . $roleId . '\')">
+                <span class="checkmark"></span>
+            </label>
+        </td>';
+                    $tbodyHtml .= '<td class="text-center" data-type="add">
+            <label class="custom_check">
+                <input name="addstatus" type="checkbox" ' . ($mainMenu->add == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $mainMenu->id . '\',\'' . $mainMenu->parent_id . '\',\'' . $mainMenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                <span class="checkmark"></span>
+            </label>
+        </td>';
+                    $tbodyHtml .= '<td class="text-center" data-type="edit">
+            <label class="custom_check">
+                <input name="editstatus" type="checkbox" ' . ($mainMenu->edit == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $mainMenu->id . '\',\'' . $mainMenu->parent_id . '\',\'' . $mainMenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                <span class="checkmark"></span>
+            </label>
+        </td>';
+                    $tbodyHtml .= '<td class="text-center" data-type="view">
+            <label class="custom_check">
+                <input name="viewstatus" type="checkbox" ' . ($mainMenu->view == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $mainMenu->id . '\',\'' . $mainMenu->parent_id . '\',\'' . $mainMenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                <span class="checkmark"></span>
+            </label>
+        </td>';
+                    $tbodyHtml .= '<td class="text-center" data-type="delete">
+            <label class="custom_check">
+                <input name="deletestatus" type="checkbox" ' . ($mainMenu->delete == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $mainMenu->id . '\',\'' . $mainMenu->parent_id . '\',\'' . $mainMenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                <span class="checkmark"></span>
+            </label>
+        </td>';
+                    $tbodyHtml .= '</tr>';
+
+                    // Display submenu data
+                    if ($mainMenu->status == 1) {
+                        foreach ($mainMenu->submenus as $submenu) {
+                            $tbodyHtml .= '<tr>';
+                            $tbodyHtml .= '<td>' . $sr++ . '</td>';
+                            $tbodyHtml .= '<td>' . $menu->name . '</td>';
+                            $tbodyHtml .= '<td>' . $mainMenu->name . '</td>';
+                            $tbodyHtml .= '<td>' . $submenu->name . '</td>';
+                            $tbodyHtml .= '<td class="text-center" data-type="menu_status">
+                        <label class="custom_check">
+                            <input name="menustatus" type="checkbox" ' . ($submenu->menu_status == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $submenu->id . '\',\'' . $submenu->parent_id . '\',\'' . $submenu->subparent_id . '\',\'' . $roleId . '\',\'type\')">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>';
+                            $tbodyHtml .= '<td class="text-center" data-type="add">
+                        <label class="custom_check">
+                            <input name="addstatus" type="checkbox" ' . ($submenu->add == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $submenu->id . '\',\'' . $submenu->parent_id . '\',\'' . $submenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>';
+                            $tbodyHtml .= '<td class="text-center" data-type="edit">
+                        <label class="custom_check">
+                            <input name="editstatus" type="checkbox" ' . ($submenu->edit == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $submenu->id . '\',\'' . $submenu->parent_id . '\',\'' . $submenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>';
+                            $tbodyHtml .= '<td class="text-center" data-type="view">
+                        <label class="custom_check">
+                            <input name="viewstatus" type="checkbox" ' . ($submenu->view == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $submenu->id . '\',\'' . $submenu->parent_id . '\',\'' . $submenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>';
+                            $tbodyHtml .= '<td class="text-center" data-type="delete">
+                        <label class="custom_check">
+                            <input name="deletestatus" type="checkbox" ' . ($submenu->delete == 1 ? 'checked' : '') . ' onclick="menuStatus(this,\'' . $submenu->id . '\',\'' . $submenu->parent_id . '\',\'' . $submenu->subparent_id . '\',\'' . $roleId . '\',1)">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>';
+                            $tbodyHtml .= '</tr>';
+                        }
+                    }
+                }
+            }
+        }
+        // Update menu status
+
+        return response()->json(['result' => $result['status'],  'table_html' => $tbodyHtml]);
+
+        // return response()->json(['result' => $result['status']]);
     }
 
     public function menu(Request $request, $Id = 0, $parentId = '', $subparentId = '')

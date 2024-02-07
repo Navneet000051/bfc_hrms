@@ -56,7 +56,7 @@ class SideMenusHelper
         $authorized = false;
         
         $actions = ['Add', 'Edit', 'Delete'];
-        if(($routeName == 'dashboard') || ($routeName == 'menuPermission' && $roleId == 1)){
+        if(($routeName == 'dashboard') || ($routeName == 'adminprofile') || ($routeName == 'changePassword') || ($routeName == 'updateProfileImg') || ($routeName == 'menuPermission' && $roleId == 1)){
             $authorized = true; 
         }
 

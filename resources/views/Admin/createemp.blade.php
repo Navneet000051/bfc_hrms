@@ -24,7 +24,7 @@
 		</div>
 		<!-- /Page Header -->
 		<!-- Inset Form --->
-		<form action="{{route('employee')}}" method="post" enctype="multipart/form-data">
+		<form action="{{route('employee')}}" method="post" enctype="multipart/form-data" id="AddForm">
 			@csrf
 		<div class="container" style="border: 1px solid orange;border-radius: 6px; background: #fff;">
 			<div class="row pt-3">
@@ -122,11 +122,6 @@
 						</div>
 					</div>
 				</div>
-
-
-
-
-
 			</div>
 
 		</div>
@@ -142,7 +137,7 @@
 								<th>#</th>
 								<th>Name</th>
 								<th>Email</th>
-								<th>Type</th>
+								<th>Address</th>
 								<th width="105px">Action</th>
 							</tr>
 						</thead>
@@ -212,6 +207,47 @@
 <!-- /Page Wrapper -->
 @endsection()
 @section('datatable')
+<script>
+	$(document).ready(function() {
+		// Initialize form validation on the #AddForm element
+		$("#AddForm").validate({
+			rules: {
+				parent: "required",
+				menuLabelSelect: "required",
+				name: "required",
+				icon: "required",
+				url: {
+					required: true,
+					// url: true // Make sure the value is a valid URL
+				}
+			},
+			messages: {
+				parent: "Please select a Parent Menu",
+				menuLabelSelect: "Please select a Menu Label",
+				name: "Please enter the Menu Name",
+				icon: "Please enter the Icon",
+				url: {
+					required: "Please enter the URL",
+					// url: "Please enter a valid URL"
+				}
+			},
+			errorElement: "span",
+			errorPlacement: function(error, element) {
+				// Adjust the placement of the error message
+				error.addClass("invalid-feedback");
+				element.closest(".form-focus").append(error);
+			},
+			highlight: function(element, errorClass, validClass) {
+				// Highlight error field
+				$(element).addClass("is-invalid").removeClass("is-valid");
+			},
+			unhighlight: function(element, errorClass, validClass) {
+				// Unhighlight valid field
+				$(element).addClass("is-valid").removeClass("is-invalid");
+			}
+		});
+	});
+</script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(function() {
@@ -232,8 +268,8 @@
 						name: 'email'
 					},
 					{
-						data: 'type',
-						name: 'type'
+						data: 'address',
+						name: 'address'
 					},
 					{
 						data: 'action',

@@ -58,6 +58,12 @@
     $('input').keypress(function(e) {
         if (this.value.length === 0 && e.which === 32) e.preventDefault();
     });
+    $('input[name="mobile"]').on('input', function() {
+        $(this).val($(this).val().replace(/\D/g, '')); // Remove non-digits
+        if ($(this).val().length > 10) {
+          $(this).val($(this).val().substr(0, 10)); // Limit to 10 digits
+        }
+      });
     $('form').validate({
 
         rules: {
