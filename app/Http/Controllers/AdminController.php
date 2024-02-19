@@ -18,6 +18,7 @@ use App\Models\rolePermission;
 use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
 use App\Helpers\sideMenusHelper;
+use App\Helpers\LogActivityHelper;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 // use MenusHelper;
@@ -32,6 +33,7 @@ class AdminController extends Controller
     {
         $routeName = Route::currentRouteName();
         // var_dump($routeName);
+        // dd(Auth::id());
         return view('Admin.admin-dashboard');
     }
     public function logout()
@@ -119,9 +121,10 @@ class AdminController extends Controller
         // Change Password
         $user = Auth::user();
         $user->password = bcrypt($request->get('new-password'));
-
+        LogActivityHelper::addToLog('Do Password change');
         // Save the user and check if the save operation was successful
         if ($user->save()) {
+            
             return redirect()->back()->with("success", "Password successfully changed!");
         } else {
             // Handle the case where the save operation fails
@@ -258,6 +261,7 @@ class AdminController extends Controller
                 $roles->updated_at = now();
 
                 if ($roles->save()) {
+                    LogActivityHelper::addToLog('Role Update');
                     return redirect('roles')->with('success', 'Data updated successfully');
                 } else {
                     return redirect('roles')->with('Error', 'Data not updated');
@@ -282,6 +286,7 @@ class AdminController extends Controller
             $roles->created_at = now();
             $roles->updated_at = now();
             if ($roles->save()) {
+                LogActivityHelper::addToLog('Role Update');
                 return redirect('roles')->with('success', 'Data save successfully');
             } else {
                 return redirect('roles')->with('Error', 'Data not saved');

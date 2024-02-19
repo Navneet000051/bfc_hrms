@@ -83,7 +83,11 @@
 								<div class="input-block mb-4 text-center">
 									<button class="btn btn-primary account-btn" type="submit">Login</button>
 								</div>
-
+								<!-- @if (Route::has('forget.password.get')) -->
+                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('forget.password.get') }}">
+                    {{ __('Forgot your password?') }}
+                </a>
+            <!-- @endif -->
 								
 							</form>
 							<!-- /Account Form -->

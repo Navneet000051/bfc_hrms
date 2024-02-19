@@ -190,6 +190,8 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Helper' => App\Helpers\Helper::class,
         'MenusHelper' => App\Helpers\MenusHelper::class,
+        'LogActivityHelper' => App\Helpers\LogActivityHelper::class,
+        'sideMenuHelper' => App\Helpers\SideMenusHelper::class,
     ])->toArray(),
     
 

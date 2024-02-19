@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\LogActivityHelper;
 
 class AuthController extends Controller
 {
@@ -32,7 +33,8 @@ class AuthController extends Controller
 
             if ($status == 1) {
                 if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
-
+                    // dd(Auth::id());
+                    LogActivityHelper::loginActivities($user->id);
                     Session::flash('success', 'Login successfully.');
                     return redirect()->route('dashboard'); // Redirect to the Dashboard route 
                 } else {

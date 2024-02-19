@@ -6,6 +6,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\changeStatusController;
 use App\Http\Controllers\DeleteController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\NewPasswordController;
 use App\Models\roles;
 
 /*
@@ -27,8 +30,13 @@ Route::middleware('admin.guest')->group(function () {
 
     Route::post('/', [AuthController::class, 'login'])->name('login');
 
-    
+    Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
 
+    Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+
+    Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+    
+    Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 });
 
 Route::middleware('admin.auth')->group(function () {
@@ -36,9 +44,9 @@ Route::middleware('admin.auth')->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'Dashboard'])->name('dashboard');
 
-    Route::get('/empdashboard',[EmployeeController::class,'Dashboard'])->name('EmployeeDashboard');
+    Route::get('/empdashboard', [EmployeeController::class, 'Dashboard'])->name('EmployeeDashboard');
 
-    Route::get('/clientdashboard',[EmployeeController::class,'Dashboard'])->name('ClientDashboard');
+    Route::get('/clientdashboard', [EmployeeController::class, 'Dashboard'])->name('ClientDashboard');
 
     Route::get('/registration', [AuthController::class, 'registration'])->name('registration');
 
@@ -47,42 +55,41 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('logout', [AdminController::class, 'logout'])->name('logout');
 
     Route::get('/adminprofile', [AdminController::class, 'adminprofile'])->name('adminprofile');
-    
-    Route::patch('/adminprofile', [AdminController::class,'adminprofile'])->name('updateProfile');
 
-    Route::post('/adminprofile', [AdminController::class,'adminprofile'])->name('updateProfileImg');
-    
-    Route::get('/changePassword', [AdminController::class,'changePasswordShow'])->name('changePassword');
+    Route::patch('/adminprofile', [AdminController::class, 'adminprofile'])->name('updateProfile');
 
-    Route::put('/changePassword', [AdminController::class,'changePassword'])->name('changePassword');
+    Route::post('/adminprofile', [AdminController::class, 'adminprofile'])->name('updateProfileImg');
 
-    Route::get('/createemp',[EmployeeController::class,'Showemp'])->name('employee');
+    Route::get('/changePassword', [AdminController::class, 'changePasswordShow'])->name('changePassword');
 
-    Route::post('/createemp',[EmployeeController::class,'Addemp'])->name('employee');
+    Route::put('/changePassword', [AdminController::class, 'changePassword'])->name('changePassword');
 
-    Route::get('/createclient',[AdminController::class,'createclient'])->name('client');
+    Route::get('/createemp', [EmployeeController::class, 'Showemp'])->name('employee');
 
-    Route::get('/roles',[AdminController::class,'roles'])->name('roles');
+    Route::post('/createemp', [EmployeeController::class, 'Addemp'])->name('employee');
 
-    Route::post('/roles',[AdminController::class,'AddRole'])->name('Addroles');
+    Route::get('/createclient', [AdminController::class, 'createclient'])->name('client');
 
-    Route::get('/roles/{id}', [AdminController::class,'roles'])->name('Updateroles');
-    
-    Route::get('/menu',[AdminController::class,'menu'])->name('menu');
+    Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
 
-    Route::post('/delmenu',[AdminController::class,'menu'])->name('Deletemenu');
+    Route::post('/roles', [AdminController::class, 'AddRole'])->name('Addroles');
 
-    Route::post('/menu',[AdminController::class,'AddMenu'])->name('Addmenu');
+    Route::get('/roles/{id}', [AdminController::class, 'roles'])->name('Updateroles');
 
-    Route::get('/menu/{Id}/{parentId}/{subparentId}', [AdminController::class, 'menu'])->name('Editmenu');   
+    Route::get('/menu', [AdminController::class, 'menu'])->name('menu');
 
-    Route::get('/menuPermission/{roleid}', [AdminController::class,'menuPermission'])->name('menuPermission');
+    Route::post('/delmenu', [AdminController::class, 'menu'])->name('Deletemenu');
 
-    Route::post('/rolePermission', [AdminController::class,'handleMenuStatus'])->name('rolePermission');
+    Route::post('/menu', [AdminController::class, 'AddMenu'])->name('Addmenu');
 
-    Route::get('/getSubparentData/{parentId}',[AdminController::class,'getSubparentData'])->name('getSubparentData');
-    Route::post('/changeStatus',[changeStatusController::class,'changeStatus'])->name('changeStatus');
+    Route::get('/menu/{Id}/{parentId}/{subparentId}', [AdminController::class, 'menu'])->name('Editmenu');
 
-    Route::delete('/deleteData',[DeleteController::class,'destroy'])->name('DeleteData');
+    Route::get('/menuPermission/{roleid}', [AdminController::class, 'menuPermission'])->name('menuPermission');
 
-}); 
+    Route::post('/rolePermission', [AdminController::class, 'handleMenuStatus'])->name('rolePermission');
+
+    Route::get('/getSubparentData/{parentId}', [AdminController::class, 'getSubparentData'])->name('getSubparentData');
+    Route::post('/changeStatus', [changeStatusController::class, 'changeStatus'])->name('changeStatus');
+
+    Route::delete('/deleteData', [DeleteController::class, 'destroy'])->name('DeleteData');
+});
