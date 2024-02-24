@@ -19,6 +19,7 @@ use App\Helpers\MenusHelper;
 use App\Helpers\rolePermissionHelper;
 use App\Helpers\sideMenusHelper;
 use App\Helpers\LogActivityHelper;
+use App\Models\LoginActivity;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 // use MenusHelper;
@@ -33,11 +34,13 @@ class AdminController extends Controller
     {
         $routeName = Route::currentRouteName();
         // var_dump($routeName);
-        // dd(Auth::id());
+    
         return view('Admin.admin-dashboard');
     }
     public function logout()
     {
+        $userid = Auth::id();
+        LogActivityHelper::logoutActivities($userid);
         Auth::guard('admin')->logout();
         Session::flash('success', 'Logout successfully.');
         return redirect()->route('login');
@@ -286,7 +289,7 @@ class AdminController extends Controller
             $roles->created_at = now();
             $roles->updated_at = now();
             if ($roles->save()) {
-                LogActivityHelper::addToLog('Role Update');
+                LogActivityHelper::addToLog('Role Add');
                 return redirect('roles')->with('success', 'Data save successfully');
             } else {
                 return redirect('roles')->with('Error', 'Data not saved');

@@ -169,7 +169,7 @@
 								@csrf
 								@method('DELETE')
 								<div class="row">
-									<form action="{{route('Deletemenu')}}" method="post" enctype="multipart/form-data">
+									
 										<div class="col-6">
 											<input type="hidden" name="Id" id="delId" />
 											<input type="hidden" name="column" id="delColumn" />

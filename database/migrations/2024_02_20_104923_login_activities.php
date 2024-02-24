@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('login_activities', function (Blueprint $table) {
-            $table->id();
-            $table->integer('userid')->nullable();
+            $table->increments('id');
             $table->string('ip');
             $table->string('agent')->nullable();
-            $table->timestamps();
+            $table->integer('userid')->nullable();
+            $table->string('login_at');
+            $table->string('logout_at'); 
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('login_activities');
+         Schema::dropIfExists('login_activities');
     }
 };

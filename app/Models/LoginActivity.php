@@ -12,7 +12,9 @@ class LoginActivity extends Model
     protected $table = 'login_activities';
     protected $primaryKey = 'id';
     
+    public $timestamps = false;
+
     protected $fillable = [
-      'ip', 'agent', 'userid', 'created_at', 'updated_at'
+      'ip', 'agent', 'userid', 'login_at', 'logout_at'
     ]; 
 }

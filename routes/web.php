@@ -9,6 +9,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\smtpController;
 use App\Models\roles;
 
 /*
@@ -92,4 +94,16 @@ Route::middleware('admin.auth')->group(function () {
     Route::post('/changeStatus', [changeStatusController::class, 'changeStatus'])->name('changeStatus');
 
     Route::delete('/deleteData', [DeleteController::class, 'destroy'])->name('DeleteData');
+
+    Route::get('showmail',[MailController::class,'show'])->name('mail');
+
+    Route::get('showmail/{id}',[MailController::class,'show'])->name('Editmail');
+
+    Route::post('sendmail',[MailController::class,'send'])->name('Addmail');
+
+    Route::get('showsmpt',[smtpController::class,'show'])->name('smtp');
+
+    Route::get('showsmtp/{id}',[smtpController::class,'show'])->name('Editsmtp');
+
+    Route::post('sendsmtp',[smtpController::class,'send'])->name('Addsmtp');
 });

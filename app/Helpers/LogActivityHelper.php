@@ -22,26 +22,33 @@ class LogActivityHelper
 
     public static function loginActivities($userid)
     {
-        // dd($userid);
-        self::initializeDatetime(); 
+       
+        self::initializeDatetime();
         $LogActivity = new LoginActivity;
         $LogActivity->ip = Request::ip();
         $LogActivity->agent = Request::header('user-agent');
         $LogActivity->userid = $userid;
-        $LogActivity->created_at = self::$datatime;
-        $LogActivity->updated_at = self::$datatime;
+        $LogActivity->login_at = self::$datatime;
+        $LogActivity->logout_at = '';
+     
         $LogActivity->save();
-       
+    }
+
+    public static function logoutActivities($userid)
+    {
+        self::initializeDatetime();
+        $logoutat = self::$datatime; 
+        $latestActivity = LoginActivity::where('userid', $userid)
+            ->orderBy('login_at', 'desc')
+            ->first();
+        if ($latestActivity) {
+            $latestActivity->update(['logout_at' => $logoutat]);
+        }
     }
     public static function addToLog($subject)
     {
-        // $browser = Agent::browser();
-        // $version = Agent::version($browser);
-        // $platform = Agent::platform();
-        // $platformversion = Agent::version($platform);
-        // Agent::isRobot();
-        // $device = Agent::device();
-        self::initializeDatetime(); 
+               
+        self::initializeDatetime();
         $LogActivity = new LogActivity;
         $LogActivity->subject = $subject;
         $LogActivity->url = Request::fullUrl();
@@ -54,6 +61,5 @@ class LogActivityHelper
         $LogActivity->created_at = self::$datatime;
         $LogActivity->updated_at = self::$datatime;
         $LogActivity->save();
-       
     }
 }

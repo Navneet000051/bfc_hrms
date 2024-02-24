@@ -323,7 +323,7 @@ if(!empty($buttonPermission)){
     }
 
     .showdatapermission {
-        display: <?php echo ($buttonPermission->view == 1) ? 'block' : 'none'; ?>;
+        display: <?php echo ($buttonPermission->view == 0) ? 'none' : ' '; ?>;
     }
 </style>
 <?php } ?>

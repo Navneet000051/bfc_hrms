@@ -51,6 +51,14 @@
 <script>
  $('.dropify').dropify();
 </script>
+<!--custom ckediter-->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/ckeditor.js"></script>
+        <!--
+            Uncomment to load the Spanish translation-->
+            <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/translations/es.js"></script>
+            <script src="{{ asset('assets/js/custom-ckeditor.js')}}"></script>
+            <!--custom Ckeditor cdn end --->
+
 <!-- Toastr cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 @section('validationjs')
